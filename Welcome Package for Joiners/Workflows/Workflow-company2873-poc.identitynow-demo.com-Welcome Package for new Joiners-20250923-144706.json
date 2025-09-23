@@ -1,0 +1,206 @@
+{
+  "id": "db8f53f9-a4bc-4bdf-b152-c1301c961d41",
+  "name": "Welcome Package for new Joiners",
+  "description": "When a new employee join the company, the manager needs to request a package of equipments through a ServiceNow request. This workflow automates the creation of the ticket based on what manager is selecting through a form",
+  "definition": {
+    "start": "Get Identity ServiceNow Account",
+    "steps": {
+      "Boolean": {
+        "choiceList": [
+          {
+            "comparator": "BooleanEquals",
+            "nextStep": "Compare Strings",
+            "variableA.$": "$.form.formData.doesYourEmployeeNeedAMobilePhone",
+            "variableB": true
+          }
+        ],
+        "defaultStep": "End Step — Success",
+        "type": "choice"
+      },
+      "Compare Strings": {
+        "choiceList": [
+          {
+            "comparator": "StringEquals",
+            "nextStep": "Order iPhone",
+            "variableA.$": "$.form.formData.mobilePhoneType",
+            "variableB": "iPhone"
+          }
+        ],
+        "defaultStep": "Compare Strings 1",
+        "type": "choice"
+      },
+      "Compare Strings 1": {
+        "choiceList": [
+          {
+            "comparator": "StringEquals",
+            "nextStep": "Order Samsung",
+            "variableA.$": "$.form.formData.mobilePhoneType",
+            "variableB": "Samsung Galaxy"
+          }
+        ],
+        "defaultStep": "Order Android",
+        "type": "choice"
+      },
+      "Define requestedFor": {
+        "attributes": {
+          "variables": [
+            {
+              "name": "requestedFor",
+              "transforms": [],
+              "variableA": "{{$.getIdentityServiceNowAccount.body[0].attributes.sys_id}}"
+            }
+          ]
+        },
+        "nextStep": "Get Manager Identity",
+        "type": "Mutation"
+      },
+      "End Step — Success": {
+        "type": "success"
+      },
+      "End Step — Success 1": {
+        "type": "success"
+      },
+      "End Step — Success 2": {
+        "type": "success"
+      },
+      "End Step — Success 3": {
+        "type": "success"
+      },
+      "Form": {
+        "actionId": "sp:forms",
+        "attributes": {
+          "deadline": "7d",
+          "formDefinitionId": "ea5f407c-c622-450a-8c67-aacda719e718",
+          "inputForForm": null,
+          "inputForForm_employeename.$": "$.trigger.attributes.displayName",
+          "notificationBody": "{{$.trigger.attributes.displayName}} just joined your team. Please submit this form to validate the equipment package that is required.",
+          "notificationSubject": "Please choose the equipment package for {{$.trigger.attributes.displayName}}",
+          "recipient.$": "$.trigger.attributes.manager.id",
+          "reminder": "1d"
+        },
+        "description": "Send a form to choose the relevant equipment package for the new employee",
+        "nextStep": "Order Computer",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Get Identity ServiceNow Account": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": null,
+          "url": "https://company2873-poc.api.identitynow-demo.com/v3/accounts",
+          "urlParams": {
+            "filters": "identityId eq \"{{$.trigger.identity.id}}\" and sourceId eq \"60a89bd906fc43ebad2b9e43b178ac46\""
+          }
+        },
+        "description": "Search for an account in servicenow",
+        "nextStep": "Define requestedFor",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Manager Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.trigger.attributes.manager.id"
+        },
+        "nextStep": "Form",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Order Android": {
+        "actionId": "sp:snow",
+        "attributes": {
+          "action": "create",
+          "authenticationType": "basic",
+          "basicAuthPassword": null,
+          "basicAuthUserName": "admin",
+          "caller": "Jerry.Bennett",
+          "category": "d68eb4d637b1300054b6a3549dbe5db2",
+          "customFields": "sysparm_requested_for:{{$.defineRequestedFor.requestedFor}}\nsysparm_quantity:1\nsysparm_no_validation:true",
+          "description": "Manager of {{$.trigger.attributes.displayName}} has requested a mobile phone for its new employee",
+          "shortDescription": "New employee {{$.trigger.attributes.displayName}} requires a mobile phone",
+          "urgency": "2",
+          "url": "https://ven04958.service-now.com/api/sn_sc/servicecatalog/items/72d931e737913000158bbfc8bcbe5d51/order_now",
+          "watchlist": null
+        },
+        "nextStep": "End Step — Success 2",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Order Computer": {
+        "actionId": "sp:snow",
+        "attributes": {
+          "action": "create",
+          "authenticationType": "basic",
+          "basicAuthPassword": null,
+          "basicAuthUserName": "admin",
+          "caller": "Olivier Detilleux",
+          "category": "900682363731300054b6a3549dbe5d5f",
+          "customFields": "sysparm_no_validation:true\nsysparm_requested_for: {{$.defineRequestedFor.requestedFor}}\nsysparm_quantity:1",
+          "description": "The manager of {{$.trigger.attributes.displayName}} has ordered a {{$.form.formData.chooseTheTypeOfComputer}} for his new employee.",
+          "shortDescription": "Please provide a {{$.form.formData.chooseTheTypeOfComputer}} for {{$.trigger.attributes.displayName}}",
+          "urgency": "2",
+          "url": "https://ven04958.service-now.com/api/sn_sc/servicecatalog/items/e46305bdc0a8010a00645e608031eb0f/order_now",
+          "watchlist": null
+        },
+        "nextStep": "Boolean",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Order Samsung": {
+        "actionId": "sp:snow",
+        "attributes": {
+          "action": "create",
+          "authenticationType": "basic",
+          "basicAuthPassword": null,
+          "basicAuthUserName": "admin",
+          "caller": "Jerry.Bennett",
+          "category": "d68eb4d637b1300054b6a3549dbe5db2",
+          "customFields": "sysparm_requested_for:{{$.defineRequestedFor.requestedFor}}\nsysparm_quantity:1\nsysparm_no_validation:true",
+          "description": "Manager of {{$.trigger.attributes.displayName}} has requested a mobile phone for its new employee",
+          "shortDescription": "New employee {{$.trigger.attributes.displayName}} requires a mobile phone",
+          "urgency": "2",
+          "url": "https://ven04958.service-now.com/api/sn_sc/servicecatalog/items/84d4fcc510247200964f77ffeec6c4fc/order_now",
+          "watchlist": null
+        },
+        "nextStep": "End Step — Success 3",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Order iPhone": {
+        "actionId": "sp:snow",
+        "attributes": {
+          "action": "create",
+          "authenticationType": "basic",
+          "basicAuthPassword": null,
+          "basicAuthUserName": "admin",
+          "caller": "Jerry.Bennett",
+          "category": "d68eb4d637b1300054b6a3549dbe5db2",
+          "customFields": "sysparm_requested_for:{{$.defineRequestedFor.requestedFor}}\nsysparm_quantity:1\nsysparm_no_validation:true",
+          "description": "Manager of {{$.trigger.attributes.displayName}} has requested a mobile phone for its new employee",
+          "shortDescription": "New employee {{$.trigger.attributes.displayName}} requires a mobile phone",
+          "urgency": "2",
+          "url": "https://ven04958.service-now.com/api/sn_sc/servicecatalog/items/d82ea08510247200964f77ffeec6c4ee/order_now",
+          "watchlist": null
+        },
+        "nextStep": "End Step — Success 1",
+        "type": "action",
+        "versionNumber": 1
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 1,
+  "failureCount": 0,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "id": "idn:identity-created"
+    }
+  }
+}

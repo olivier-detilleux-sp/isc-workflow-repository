@@ -1,0 +1,377 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "a9c1aace-3fd7-47e6-bf76-b0403b5dcdf7",
+      "name": "Track my Requests : Display Approval Activity"
+    },
+    "object": {
+      "id": "a9c1aace-3fd7-47e6-bf76-b0403b5dcdf7",
+      "name": "Track my Requests : Display Approval Activity",
+      "description": "Track my Requests workflow : Display Approval activity",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "68126d278b4c493badc68a0669c682f4",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "accessItemName",
+          "type": "STRING",
+          "label": "Access Item Name",
+          "description": "Name of the access that has been requested"
+        },
+        {
+          "id": "accessItemDescription",
+          "type": "STRING",
+          "label": "Access Item Description",
+          "description": "Description of the access that has been requested"
+        },
+        {
+          "id": "requestedFor",
+          "type": "STRING",
+          "label": "Requested For",
+          "description": "Name of the identity for which the access has been requested"
+        },
+        {
+          "id": "requestedDate",
+          "type": "STRING",
+          "label": "Requested Date",
+          "description": ""
+        },
+        {
+          "id": "currentOwner",
+          "type": "STRING",
+          "label": "currentOwner",
+          "description": ""
+        },
+        {
+          "id": "originalOwner",
+          "type": "STRING",
+          "label": "originalOwner",
+          "description": ""
+        }
+      ],
+      "formElements": [
+        {
+          "id": "74872854236",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Access Item",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "1288739162168",
+                "key": "accessItem",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Access Item Description",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "15923023791",
+                "key": "accessItemDescription",
+                "validations": []
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Requested Date",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1711552860148",
+                        "key": "requestedDate",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Requested For",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "897013446200",
+                        "key": "requestedFor",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "704403604562",
+                "key": "",
+                "validations": []
+              }
+            ],
+            "label": "General Information",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "114915171022",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "This is the current approver of your request.",
+                  "label": "Current Approval Owner",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "898899006477",
+                "key": "currentOwner",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "This is the current approver of your request.",
+                  "label": "Original Approval Owner",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "1016752445601",
+                "key": "originalOwner",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": false,
+                  "falseLabel": "No",
+                  "helpText": "If you want to send a message to the approver(s), select Yes",
+                  "label": "Do you want to send a message to the approver(s) ? ",
+                  "trueLabel": "Yes"
+                },
+                "elementType": "TOGGLE",
+                "id": "833279486452",
+                "key": "sendMessage",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "Please formulate your request to the approver",
+                  "label": "Message",
+                  "placeholder": "",
+                  "required": false,
+                  "resize": true,
+                  "rows": 4
+                },
+                "elementType": "TEXTAREA",
+                "id": "1044777130730",
+                "key": "message",
+                "validations": []
+              }
+            ],
+            "label": "Details",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "accessItemName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1288739162168"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "accessItemName",
+                "element": "1288739162168"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1711552860148"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "requestedDate",
+                "element": "1711552860148"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "897013446200"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "requestedFor",
+                "element": "897013446200"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "accessItemDescription",
+              "operator": "NOT_SW",
+              "valueType": "STRING",
+              "value": "$.hTTPRequest"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "15923023791"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "15923023791"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "accessItemDescription",
+                "element": "15923023791"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "currentOwner",
+              "operator": "NE",
+              "valueType": "STRING",
+              "value": "N/A"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "currentOwner",
+                "element": "898899006477"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "898899006477"
+              }
+            },
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "898899006477"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "originalOwner",
+              "operator": "NE",
+              "valueType": "STRING",
+              "value": "N/A"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "originalOwner",
+                "element": "1016752445601"
+              }
+            },
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "1016752445601"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1016752445601"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-01-20T09:49:56.127924148Z",
+      "modified": "2025-01-21T15:02:01.296484579Z"
+    }
+  }
+]

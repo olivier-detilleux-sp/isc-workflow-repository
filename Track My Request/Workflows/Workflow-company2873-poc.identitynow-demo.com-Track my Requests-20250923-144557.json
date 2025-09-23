@@ -1,0 +1,415 @@
+{
+  "id": "e5e3ce38-5cd1-4be6-9ba4-9933a2370ce8",
+  "name": "Track my Requests",
+  "description": "This launcher can be used by any end users to track their pending access request, get details about the approver and send a reminder",
+  "definition": {
+    "start": "HTTP Request",
+    "steps": {
+      "Compare Boolean": {
+        "choiceList": [
+          {
+            "comparator": "BooleanEquals",
+            "nextStep": "Send Email",
+            "variableA.$": "$.interactiveForm2.formData.sendMessage",
+            "variableB": true
+          }
+        ],
+        "defaultStep": "End Step - Success",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Compare Boolean 1": {
+        "choiceList": [
+          {
+            "comparator": "BooleanEquals",
+            "nextStep": "Send Email 1",
+            "variableA.$": "$.interactiveForm3.formData.sendMessage",
+            "variableB": true
+          }
+        ],
+        "defaultStep": "End Step - Success",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Compare Boolean 2": {
+        "choiceList": [
+          {
+            "comparator": "BooleanEquals",
+            "nextStep": "Send Email 2",
+            "variableA.$": "$.interactiveForm4.formData.sendMessage",
+            "variableB": true
+          }
+        ],
+        "defaultStep": "End Step - Success",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Compare Strings": {
+        "choiceList": [
+          {
+            "comparator": "StringDoesNotEquals",
+            "nextStep": "Verify Data Type",
+            "variableA.$": "$.hTTPRequest4.body[0].approvalDetails[?(@.status == \"PENDING\" && @.approvalId)].scheme",
+            "variableB": "GOVERNANCE_GROUP"
+          }
+        ],
+        "defaultStep": "HTTP Request 2",
+        "displayName": "Scheme is not GOVERNANCE_GROUP",
+        "type": "choice"
+      },
+      "Compare Strings 1": {
+        "choiceList": [
+          {
+            "comparator": "StringContains",
+            "nextStep": "Compare Strings",
+            "variableA.$": "$.defineVariable2.accessRequestPhase",
+            "variableB": "APPROVAL_PHASE"
+          }
+        ],
+        "defaultStep": "HTTP Request 1",
+        "displayName": "State is APPROVAL_PHASE",
+        "type": "choice"
+      },
+      "Define Variable 2": {
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "Access Item Name",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest.body[?(@.accessRequestId == \"{{$.interactiveForm.formData.pendingAccessRequests}}\")].name"
+            },
+            {
+              "description": "",
+              "name": "Access Item Description",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest.body[?(@.accessRequestId == \"{{$.interactiveForm.formData.pendingAccessRequests}}\")].description"
+            },
+            {
+              "description": "",
+              "name": "Access Request Created",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest.body[?(@.accessRequestId == \"{{$.interactiveForm.formData.pendingAccessRequests}}\")].created"
+            },
+            {
+              "description": "",
+              "name": "Requested For",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest.body[?(@.accessRequestId == \"{{$.interactiveForm.formData.pendingAccessRequests}}\")].requestedFor.name"
+            },
+            {
+              "description": "",
+              "name": "Access Request Phase",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest4.body[0].accessRequestPhases[?(@.state == \"EXECUTING\")].name"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Compare Strings 1",
+        "type": "Mutation"
+      },
+      "Define Variable 3": {
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "Provisioning Error",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest1.body[0].accountRequests[0].result.errors[0]"
+            },
+            {
+              "description": "",
+              "name": "Ticket Number",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest1.body[0].accountRequests[0].result.ticketId"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Interactive Form 1",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "displayName": "",
+        "type": "success"
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.hTTPRequest4.body[0].approvalDetails[?(@.status == \"PENDING\" && @.approvalId)].currentOwner.id"
+        },
+        "displayName": "Get Current Owner Identity",
+        "nextStep": "Interactive Form 3",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Identity 1": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.hTTPRequest4.body[0].approvalDetails[?(@.status == \"PENDING\" && @.approvalId)].originalOwner.id"
+        },
+        "displayName": "Get Original Owner Identity",
+        "nextStep": "Interactive Form 4",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "url": "https://company2873-poc.api.identitynow-demo.com/v2024/access-request-status",
+          "urlParams": {
+            "request-state": "EXECUTING",
+            "requested-by": "{{$.trigger.launchedBy.id}}"
+          }
+        },
+        "description": "Get pending access request for the launcher",
+        "displayName": "List Pending Access Requests",
+        "nextStep": "Interactive Form",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "indices": [
+              "accountactivities"
+            ],
+            "query": {
+              "query": "{{$.interactiveForm.formData.pendingAccessRequests}}"
+            },
+            "sort": [
+              "-modified"
+            ]
+          },
+          "method": "post",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": "",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company2873-poc.api.identitynow-demo.com/v3/search",
+          "urlParams": null
+        },
+        "description": "Get Account Activity from Access Request ID",
+        "displayName": "Search Account Activity",
+        "nextStep": "Define Variable 3",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 2": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": null,
+          "method": "get",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": "",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": null,
+          "url": "https://company2873-poc.api.identitynow-demo.com/beta/workgroups/{{$.hTTPRequest4.body[0].approvalDetails[?(@.status == \"PENDING\" && @.approvalId)].originalOwner.id}}/members",
+          "urlParams": null
+        },
+        "description": "Get Account Activity from Access Request ID",
+        "displayName": "Get Governance Group Members",
+        "nextStep": "Interactive Form 2",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 4": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "url": "https://company2873-poc.api.identitynow-demo.com/v2024/access-request-status",
+          "urlParams": {
+            "filters": "accessRequestId eq \"{{$.interactiveForm.formData.pendingAccessRequests}}\""
+          }
+        },
+        "description": "Get pending access request for the launcher",
+        "displayName": "Get Pending Access Request by Id",
+        "nextStep": "Define Variable 2",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Interactive Form": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "90eef28d-78cb-4a71-bda6-8c06b6cfdfd7",
+          "inputForForm_array_requests.$": "$.hTTPRequest.body",
+          "inputForForm_array_requests_label": "$.accessRequestId",
+          "inputForForm_array_requests_subLabel": "$.name",
+          "inputForForm_array_requests_value": "$.accessRequestId",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>Select a pending access request from the list below to track its status.</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Pending Access Requests"
+        },
+        "displayName": "Select Pending Access Requests",
+        "nextStep": "HTTP Request 4",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Form 1": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "55e7789e-4faa-4f40-bda9-db8fa66a6ad2",
+          "inputForForm_accessItemDescription.$": "$.defineVariable2.accessItemDescription",
+          "inputForForm_accessItemName.$": "$.defineVariable2.accessItemName",
+          "inputForForm_provisioningError.$": "$.defineVariable3.provisioningError",
+          "inputForForm_requestedDate.$": "$.defineVariable2.accessRequestCreated",
+          "inputForForm_requestedFor.$": "$.defineVariable2.requestedFor",
+          "inputForForm_ticketNumber.$": "$.defineVariable3.ticketNumber",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Provisioning Details"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Form 2": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "ba47a02b-4510-4ae1-869b-b8341968fb22",
+          "inputForForm_accessItemDescription.$": "$.defineVariable2.accessItemDescription",
+          "inputForForm_accessItemName.$": "$.defineVariable2.accessItemName",
+          "inputForForm_array_governanceGroupMembers.$": "$.hTTPRequest2.body",
+          "inputForForm_array_governanceGroupMembers_label": "$.name",
+          "inputForForm_array_governanceGroupMembers_value": "$.email",
+          "inputForForm_requestedDate.$": "$.defineVariable2.accessRequestCreated",
+          "inputForForm_requestedFor.$": "$.defineVariable2.requestedFor",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Approval State"
+        },
+        "displayName": "",
+        "nextStep": "Compare Boolean",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Form 3": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "a9c1aace-3fd7-47e6-bf76-b0403b5dcdf7",
+          "inputForForm_accessItemDescription.$": "$.defineVariable2.accessItemDescription",
+          "inputForForm_accessItemName.$": "$.defineVariable2.accessItemName",
+          "inputForForm_currentOwner.$": "$.getIdentity.attributes.email",
+          "inputForForm_originalOwner": "N/A",
+          "inputForForm_requestedDate.$": "$.defineVariable2.accessRequestCreated",
+          "inputForForm_requestedFor.$": "$.defineVariable2.requestedFor",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Approval State"
+        },
+        "displayName": "",
+        "nextStep": "Compare Boolean 1",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Form 4": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "a9c1aace-3fd7-47e6-bf76-b0403b5dcdf7",
+          "inputForForm_accessItemDescription.$": "$.defineVariable2.accessItemDescription",
+          "inputForForm_accessItemName.$": "$.defineVariable2.accessItemName",
+          "inputForForm_currentOwner": "N/A",
+          "inputForForm_originalOwner.$": "$.getIdentity1.attributes.email",
+          "inputForForm_requestedDate.$": "$.defineVariable2.accessRequestCreated",
+          "inputForForm_requestedFor.$": "$.defineVariable2.requestedFor",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Approval State"
+        },
+        "displayName": "",
+        "nextStep": "Compare Boolean 2",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Send Email": {
+        "actionId": "sp:send-email",
+        "attributes": {
+          "body.$": "$.interactiveForm2.formData.message",
+          "context": {},
+          "from": "no-reply@sailpoint.com",
+          "recipientEmailList.$": "$.interactiveForm2.formData.approvers",
+          "subject": "Notification"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Send Email 1": {
+        "actionId": "sp:send-email",
+        "attributes": {
+          "body.$": "$.interactiveForm3.formData.message",
+          "context": {},
+          "from": "no-reply@sailpoint.com",
+          "recipientEmailList.$": "$.interactiveForm3.formData.currentOwner",
+          "subject": "Notification"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Send Email 2": {
+        "actionId": "sp:send-email",
+        "attributes": {
+          "body.$": "$.interactiveForm4.formData.message",
+          "context": {},
+          "from": "no-reply@sailpoint.com",
+          "recipientEmailList.$": "$.interactiveForm4.formData.originalOwner",
+          "subject": "Notification"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Verify Data Type": {
+        "choiceList": [
+          {
+            "comparator": "IsNull",
+            "nextStep": "Get Identity 1",
+            "variableA.$": "$.hTTPRequest4.body[0].approvalDetails[?(@.status == \"PENDING\" && @.approvalId)].currentOwner"
+          }
+        ],
+        "defaultStep": "Get Identity",
+        "displayName": "CurrentOwner is Null",
+        "type": "choice"
+      }
+    }
+  },
+  "enabled": true,
+  "executionCount": 8,
+  "failureCount": 4,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.workflowId == 'e5e3ce38-5cd1-4be6-9ba4-9933a2370ce8')]",
+      "id": "idn:interactive-process-launched"
+    }
+  }
+}

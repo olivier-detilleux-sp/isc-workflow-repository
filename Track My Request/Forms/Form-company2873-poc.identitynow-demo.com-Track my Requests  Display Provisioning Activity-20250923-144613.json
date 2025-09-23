@@ -1,0 +1,348 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "55e7789e-4faa-4f40-bda9-db8fa66a6ad2",
+      "name": "Track my Requests : Display Provisioning Activity"
+    },
+    "object": {
+      "id": "55e7789e-4faa-4f40-bda9-db8fa66a6ad2",
+      "name": "Track my Requests : Display Provisioning Activity",
+      "description": "Track my Requests workflow : Display provisioning activity",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "68126d278b4c493badc68a0669c682f4",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "accessItemName",
+          "type": "STRING",
+          "label": "Access Item Name",
+          "description": "Name of the access that has been requested"
+        },
+        {
+          "id": "accessItemDescription",
+          "type": "STRING",
+          "label": "Access Item Description",
+          "description": "Description of the access that has been requested"
+        },
+        {
+          "id": "requestedFor",
+          "type": "STRING",
+          "label": "Requested For",
+          "description": "Name of the identity for which the access has been requested"
+        },
+        {
+          "id": "requestedDate",
+          "type": "STRING",
+          "label": "Requested Date",
+          "description": ""
+        },
+        {
+          "id": "ticketNumber",
+          "type": "STRING",
+          "label": "ticketNumber",
+          "description": ""
+        },
+        {
+          "id": "provisioningError",
+          "type": "STRING",
+          "label": "provisioningError",
+          "description": ""
+        }
+      ],
+      "formElements": [
+        {
+          "id": "74872854236",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Access Item",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "1288739162168",
+                "key": "accessItem",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Access Item Description",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "15923023791",
+                "key": "accessItemDescription",
+                "validations": []
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Requested Date",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1711552860148",
+                        "key": "requestedDate",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Requested For",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "897013446200",
+                        "key": "requestedFor",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "704403604562",
+                "key": "",
+                "validations": []
+              }
+            ],
+            "label": "General Information",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "114915171022",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "This is the number of the ticket that has been open in EasyVista for the manual provisioning. If you need any further information about the status, you can open the ticket in EasyVista.",
+                  "label": "Ticket Number",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "970125708886",
+                "key": "ticketNumber",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "An error occured during the provisioning of the access in the target application. Please contact the Support Team for more details.",
+                  "label": "Provisioning Error",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "338892643894",
+                "key": "provisioningError",
+                "validations": []
+              }
+            ],
+            "label": "Details",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "accessItemName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1288739162168"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "accessItemName",
+                "element": "1288739162168"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1711552860148"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "requestedDate",
+                "element": "1711552860148"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "897013446200"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "requestedFor",
+                "element": "897013446200"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "accessItemDescription",
+              "operator": "NOT_SW",
+              "valueType": "STRING",
+              "value": "$.hTTPRequest"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "15923023791"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "15923023791"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "accessItemDescription",
+                "element": "15923023791"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "ticketNumber",
+              "operator": "NE",
+              "valueType": "STRING",
+              "value": "$.hTTPRequest1.body[0].accountRequests[0].ticketNumber"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "970125708886"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "970125708886"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "ticketNumber",
+                "element": "970125708886"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "provisioningError",
+              "operator": "NE",
+              "valueType": "STRING",
+              "value": "$.hTTPRequest1.body[0].accountRequests[0].result.errors[0]"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "338892643894"
+              }
+            },
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "338892643894"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "provisioningError",
+                "element": "338892643894"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-01-21T14:42:07.499070935Z",
+      "modified": "2025-01-21T14:57:35.747442941Z"
+    }
+  }
+]

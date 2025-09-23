@@ -1,0 +1,144 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "90eef28d-78cb-4a71-bda6-8c06b6cfdfd7",
+      "name": "Track my Requests : List Pending Requests"
+    },
+    "object": {
+      "id": "90eef28d-78cb-4a71-bda6-8c06b6cfdfd7",
+      "name": "Track my Requests : List Pending Requests",
+      "description": "Track my Requests workflow : Form to get pending access requests",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "68126d278b4c493badc68a0669c682f4",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "requests",
+          "type": "ARRAY",
+          "label": "requests",
+          "description": "User's pending access request list"
+        }
+      ],
+      "formElements": [
+        {
+          "id": "1369468786112",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "alignment": "CENTER",
+                          "altText": "Locate your access request id",
+                          "fileId": "01JJ1VK853EYHS9W2QP7D942SY.png",
+                          "label": "Image Field",
+                          "mimeType": "image/png",
+                          "originalFilename": "accessrequestid.png",
+                          "showLabel": true
+                        },
+                        "elementType": "IMAGE",
+                        "id": "736502073169",
+                        "key": "",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "To get the Access Request Id of the request you want to track, search for that access request is your \"My Requests\" list. Locate the access request and click on the Copy Icon next to the Id. You can then use that ID to find your access request in the list below",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Instructions",
+                          "placeholder": "",
+                          "required": false,
+                          "resize": true,
+                          "rows": 10
+                        },
+                        "elementType": "TEXTAREA",
+                        "id": "843850630620",
+                        "key": "instructions",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "975142914557",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "requests",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Pending Access Requests",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "SELECT",
+                "id": "1177598123714",
+                "key": "pendingAccessRequests",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  }
+                ]
+              }
+            ],
+            "label": "Section",
+            "labelStyle": "h2",
+            "showLabel": false
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "requests",
+              "operator": "NOT_EM",
+              "valueType": "STRING_LIST",
+              "value": []
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "843850630620"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-01-20T08:04:45.084912403Z",
+      "modified": "2025-01-20T12:43:01.899170656Z"
+    }
+  }
+]

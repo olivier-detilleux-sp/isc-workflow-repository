@@ -1,0 +1,302 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "ba47a02b-4510-4ae1-869b-b8341968fb22",
+      "name": "Track my Requests : Display Governance Group Activity"
+    },
+    "object": {
+      "id": "ba47a02b-4510-4ae1-869b-b8341968fb22",
+      "name": "Track my Requests : Display Governance Group Activity",
+      "description": "Track my Requests workflow : Display Approval activity",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "68126d278b4c493badc68a0669c682f4",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "accessItemName",
+          "type": "STRING",
+          "label": "Access Item Name",
+          "description": "Name of the access that has been requested"
+        },
+        {
+          "id": "accessItemDescription",
+          "type": "STRING",
+          "label": "Access Item Description",
+          "description": "Description of the access that has been requested"
+        },
+        {
+          "id": "requestedFor",
+          "type": "STRING",
+          "label": "Requested For",
+          "description": "Name of the identity for which the access has been requested"
+        },
+        {
+          "id": "requestedDate",
+          "type": "STRING",
+          "label": "Requested Date",
+          "description": ""
+        },
+        {
+          "id": "governanceGroupMembers",
+          "type": "ARRAY",
+          "label": "governanceGroupMembers",
+          "description": ""
+        }
+      ],
+      "formElements": [
+        {
+          "id": "74872854236",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Access Item",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "1288739162168",
+                "key": "accessItem",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Access Item Description",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "15923023791",
+                "key": "accessItemDescription",
+                "validations": []
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Requested Date",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1711552860148",
+                        "key": "requestedDate",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Requested For",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "897013446200",
+                        "key": "requestedFor",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "704403604562",
+                "key": "",
+                "validations": []
+              }
+            ],
+            "label": "General Information",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "114915171022",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "governanceGroupMembers",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "Your request has been sent for approval to a Governance Group. Members of that group are listed in that list. You can select up to 5 people if you want to notify them.",
+                  "label": "Approvers",
+                  "maximum": 5,
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "SELECT",
+                "id": "242449476755",
+                "key": "approvers",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "default": false,
+                  "falseLabel": "No",
+                  "helpText": "If you want to send a message to the approver(s), select Yes",
+                  "label": "Do you want to send a message to the approver(s) ? ",
+                  "trueLabel": "Yes"
+                },
+                "elementType": "TOGGLE",
+                "id": "833279486452",
+                "key": "sendMessage",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "Please formulate your request to the approver",
+                  "label": "Message",
+                  "placeholder": "",
+                  "required": false,
+                  "resize": true,
+                  "rows": 4
+                },
+                "elementType": "TEXTAREA",
+                "id": "1044777130730",
+                "key": "message",
+                "validations": []
+              }
+            ],
+            "label": "Details",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "accessItemName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1288739162168"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "accessItemName",
+                "element": "1288739162168"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1711552860148"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "requestedDate",
+                "element": "1711552860148"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "897013446200"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "requestedFor",
+                "element": "897013446200"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "accessItemDescription",
+              "operator": "NOT_SW",
+              "valueType": "STRING",
+              "value": "$.hTTPRequest"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "15923023791"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "15923023791"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "accessItemDescription",
+                "element": "15923023791"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-01-21T14:44:30.364695929Z",
+      "modified": "2025-01-21T14:58:16.892584179Z"
+    }
+  }
+]

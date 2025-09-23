@@ -1,0 +1,265 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "ea5f407c-c622-450a-8c67-aacda719e718",
+      "name": "New Joiner Equipment Package"
+    },
+    "object": {
+      "id": "ea5f407c-c622-450a-8c67-aacda719e718",
+      "name": "New Joiner Equipment Package",
+      "description": "Form to choose the package of equipment for a new joiner",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "68126d278b4c493badc68a0669c682f4",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "employeetype",
+          "type": "STRING",
+          "label": "employeeType",
+          "description": "A single dynamic scalar value (i.e. number, string, date, etc) that can be passed into the form for use in conditional logic"
+        },
+        {
+          "id": "employeename",
+          "type": "STRING",
+          "label": "employeeName",
+          "description": "A single dynamic scalar value (i.e. number, string, date, etc) that can be passed into the form for use in conditional logic"
+        }
+      ],
+      "formElements": [
+        {
+          "id": "9205249448921846",
+          "elementType": "SECTION",
+          "config": {
+            "description": null,
+            "formElements": [
+              {
+                "config": {
+                  "default": null,
+                  "description": null,
+                  "helpText": null,
+                  "label": "Employee Name",
+                  "placeholder": null,
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "3202880933199901",
+                "key": "employeeName",
+                "validations": null
+              }
+            ],
+            "label": "Employee Informations",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "2351442798986629",
+          "elementType": "SECTION",
+          "config": {
+            "description": null,
+            "formElements": [
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "options": [
+                        {
+                          "label": "Standard Desktop",
+                          "subLabel": null,
+                          "value": "Standard Desktop"
+                        },
+                        {
+                          "label": "Executive Desktop",
+                          "subLabel": null,
+                          "value": "Executive Desktop"
+                        }
+                      ]
+                    },
+                    "dataSourceType": "STATIC"
+                  },
+                  "forceSelect": true,
+                  "helpText": "You have the choice between a Standard Desktop (Dell Precision 690 with 2.66GHz CPU) or Executive Desktop (Dell Precision 690 with 3.00GHz CPU)",
+                  "label": "Choose the type of computer",
+                  "maximum": 1,
+                  "placeholder": "Standard Desktop",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "7249398066830293",
+                "key": "chooseTheTypeOfComputer",
+                "validations": [
+                  {
+                    "config": null,
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "default": false,
+                  "falseLabel": "No",
+                  "helpText": "Check the option if your subordinate needs a mobile phone (only for employees)",
+                  "label": "Does your employee need a mobile phone ?",
+                  "trueLabel": "Yes"
+                },
+                "elementType": "TOGGLE",
+                "id": "9497109741954468",
+                "key": "doesYourEmployeeNeedAMobilePhone",
+                "validations": null
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "options": [
+                        {
+                          "label": "iPhone",
+                          "subLabel": null,
+                          "value": "iPhone"
+                        },
+                        {
+                          "label": "Google Android",
+                          "subLabel": null,
+                          "value": "Google Android"
+                        },
+                        {
+                          "label": "Samsung Galaxy",
+                          "subLabel": null,
+                          "value": "Samsung Galaxy"
+                        }
+                      ]
+                    },
+                    "dataSourceType": "STATIC"
+                  },
+                  "forceSelect": true,
+                  "helpText": "You have the choice between iPhone, Samsung Galaxy or Google Android",
+                  "label": "Mobile Phone Type",
+                  "maximum": 1,
+                  "placeholder": "iPhone",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "5199716958754519",
+                "key": "mobilePhoneType",
+                "validations": [
+                  {
+                    "config": null,
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "Package Selection",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "ELEMENT",
+              "source": "doesYourEmployeeNeedAMobilePhone",
+              "operator": "EQ",
+              "valueType": "BOOLEAN",
+              "value": "true"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "5199716958754519"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "employeeType",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "3794531364048943"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "employeeType",
+                "element": "3794531364048943"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "employeeName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "3202880933199901"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "employeeName",
+                "element": "3202880933199901"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "employeeType",
+              "operator": "EQ",
+              "valueType": "STRING",
+              "value": "contractor"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "9497109741954468"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2023-06-29T09:14:03.882019901Z",
+      "modified": "2023-09-22T11:36:37.391383523Z"
+    }
+  }
+]

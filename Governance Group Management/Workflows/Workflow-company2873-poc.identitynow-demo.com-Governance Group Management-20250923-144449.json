@@ -1,0 +1,199 @@
+{
+  "id": "837ddc00-6940-4972-99f3-a798b67531d0",
+  "name": "Governance Group Management",
+  "description": "Manage the membership of your Governance Groups",
+  "definition": {
+    "start": "Interactive Message",
+    "steps": {
+      "End Step - Success": {
+        "displayName": "",
+        "type": "success"
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "indices": [
+              "identities"
+            ],
+            "query": {
+              "fields": [
+                "name"
+              ],
+              "query": "id:{{$.trigger.launchedBy.id}}"
+            }
+          },
+          "method": "post",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "requestHeaders": {
+            "X-SailPoint-Experimental": "true"
+          },
+          "url": "https://company2873-poc.api.identitynow-demo.com/v2024/search"
+        },
+        "description": "List all governance groups",
+        "displayName": "List Governance Groups",
+        "nextStep": "Interactive Form",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": null,
+          "method": "get",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": null,
+          "requestHeaders": {
+            "X-SailPoint-Experimental": "true"
+          },
+          "url": "https://company2873-poc.api.identitynow-demo.com/v2024/workgroups/{{$.interactiveForm.formData.groupId}}/members",
+          "urlParams": null
+        },
+        "description": "Get Governance Group Members",
+        "displayName": "Get Governance Group Members",
+        "nextStep": "Interactive Form 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Interactive Form": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "93ea6674-ec56-4477-a51e-2d450bb58dfe",
+          "inputForForm_array_groups.$": "$.hTTPRequest.body[0].owns.governanceGroups",
+          "inputForForm_array_groups_label": "$.name",
+          "inputForForm_array_groups_subLabel": "",
+          "inputForForm_array_groups_value": "$.id",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Governance Group Management"
+        },
+        "displayName": "Form : Select Group to Manage",
+        "nextStep": "HTTP Request 1",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Form 1": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "7ca39e61-822e-4122-acca-2aedc65e0b50",
+          "inputForForm_array_members.$": "$.hTTPRequest1.body",
+          "inputForForm_array_members_label": "$.name",
+          "inputForForm_array_members_subLabel": "$.email",
+          "inputForForm_array_members_value": "$.id",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Select the members you would like to remove from the group"
+        },
+        "displayName": "Form : Select Members to Remove",
+        "nextStep": "Loop",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Message": {
+        "actionId": "sp:interactive-message",
+        "attributes": {
+          "category": "INFO",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>You can use this workflow to remove members from your governance groups.&nbsp;</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Remove members of your Governance Groups"
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Message 1": {
+        "actionId": "sp:interactive-message",
+        "attributes": {
+          "category": "INFO",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>You can now safely close this window</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Process is completed"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Loop": {
+        "actionId": "sp:loop:iterator",
+        "attributes": {
+          "context.$": "$.interactiveForm.formData",
+          "input.$": "$.interactiveForm1.formData.membersToRemove",
+          "start": "Get Identity",
+          "steps": {
+            "End Step - Success 1": {
+              "displayName": "",
+              "type": "success"
+            },
+            "Get Identity": {
+              "actionId": "sp:get-identity",
+              "attributes": {
+                "id.$": "$.loop.loopInput"
+              },
+              "displayName": "",
+              "nextStep": "HTTP Request 2",
+              "type": "action",
+              "versionNumber": 2
+            },
+            "HTTP Request 2": {
+              "actionId": "sp:http",
+              "attributes": {
+                "authenticationType": "OAuth",
+                "jsonRequestBody": [
+                  [
+                    {
+                      "id": "{{$.loop.loopInput}}"
+                    }
+                  ]
+                ],
+                "method": "post",
+                "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+                "oAuthClientSecret": null,
+                "oAuthCredentialLocation": "oAuthInHeader",
+                "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+                "requestContentType": "json",
+                "requestHeaders": {
+                  "X-SailPoint-Experimental": "true"
+                },
+                "url": "https://company2873-poc.api.identitynow-demo.com/v2024/workgroups/{{$.loop.context.groupId}}/members/bulk-delete",
+                "urlParams": null
+              },
+              "description": "Remove members from the Governance Group",
+              "displayName": "Remove Member",
+              "nextStep": "End Step - Success 1",
+              "type": "action",
+              "versionNumber": 2
+            }
+          }
+        },
+        "displayName": "",
+        "nextStep": "Interactive Message 1",
+        "type": "action",
+        "versionNumber": 1
+      }
+    }
+  },
+  "enabled": true,
+  "executionCount": 11,
+  "failureCount": 4,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.workflowId == '837ddc00-6940-4972-99f3-a798b67531d0')]",
+      "id": "idn:interactive-process-launched"
+    }
+  }
+}

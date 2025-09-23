@@ -1,0 +1,76 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "93ea6674-ec56-4477-a51e-2d450bb58dfe",
+      "name": "Select Governance Group"
+    },
+    "object": {
+      "id": "93ea6674-ec56-4477-a51e-2d450bb58dfe",
+      "name": "Select Governance Group",
+      "description": "Form to select a governance group from a dropdown list",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "68126d278b4c493badc68a0669c682f4",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "groups",
+          "type": "ARRAY",
+          "label": "groups",
+          "description": "List of groups to be managed"
+        }
+      ],
+      "formElements": [
+        {
+          "id": "1111985886656",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "groups",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "Select the group you want to manage",
+                  "label": "Select a Group",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1502107953151",
+                "key": "groupId",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "Section",
+            "labelStyle": "h2",
+            "showLabel": false
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [],
+      "created": "2024-09-24T11:44:49.855552355Z",
+      "modified": "2024-09-24T11:46:27.317490729Z"
+    }
+  }
+]

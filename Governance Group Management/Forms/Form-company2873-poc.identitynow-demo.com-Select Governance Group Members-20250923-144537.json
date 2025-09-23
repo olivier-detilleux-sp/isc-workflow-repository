@@ -1,0 +1,73 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "7ca39e61-822e-4122-acca-2aedc65e0b50",
+      "name": "Select Governance Group Members"
+    },
+    "object": {
+      "id": "7ca39e61-822e-4122-acca-2aedc65e0b50",
+      "name": "Select Governance Group Members",
+      "description": "Workgroup Management : Select members to remove",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "68126d278b4c493badc68a0669c682f4",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "members",
+          "type": "ARRAY",
+          "label": "members",
+          "description": "Governance Group Members"
+        }
+      ],
+      "formElements": [
+        {
+          "id": "834839619875",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "members",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "Select the members you would like to remove from the group",
+                  "label": "Members to Remove",
+                  "maximum": 30,
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "SELECT",
+                "id": "748979963830",
+                "key": "membersToRemove",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  }
+                ]
+              }
+            ],
+            "label": "Section",
+            "labelStyle": "h2",
+            "showLabel": false
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [],
+      "created": "2024-09-24T17:02:03.462095356Z",
+      "modified": "2024-09-24T17:03:28.506980226Z"
+    }
+  }
+]
