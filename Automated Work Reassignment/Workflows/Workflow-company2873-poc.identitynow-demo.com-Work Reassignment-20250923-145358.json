@@ -1,0 +1,180 @@
+{
+  "id": "c24063e1-2bb6-406a-ab20-bf47eba6ec64",
+  "name": "Work Reassignment",
+  "description": "Set  Work Reassignment based on Outlook Out Of Office Status",
+  "definition": {
+    "start": "Get Identity",
+    "steps": {
+      "Compare Strings": {
+        "choiceList": [
+          {
+            "comparator": "StringEquals",
+            "nextStep": "Verify Data Type",
+            "variableA.$": "$.trigger.changes[?(@.attribute == 'outOfOfficeStatus')].newValue",
+            "variableB": "enabled"
+          }
+        ],
+        "defaultStep": "Delete Work Reassignment - Access Request",
+        "type": "choice"
+      },
+      "Delete Work Reassignment - Access Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "delete",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company2873-poc.api.identitynow-demo.com/beta/reassignment-configurations/{{$.trigger.identity.id}}/ACCESS_REQUESTS"
+        },
+        "nextStep": "Delete Work Reassignment - Certifications",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Delete Work Reassignment - Certifications": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "delete",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company2873-poc.api.identitynow-demo.com/beta/reassignment-configurations/{{$.trigger.identity.id}}/ACCESS_REQUESTS"
+        },
+        "nextStep": "Delete Work Reassignment - Manual Tasks",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Delete Work Reassignment - Manual Tasks": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "delete",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company2873-poc.api.identitynow-demo.com/beta/reassignment-configurations/{{$.trigger.identity.id}}/ACCESS_REQUESTS"
+        },
+        "nextStep": "End Step — Success 2",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "End Step — Success": {
+        "type": "success"
+      },
+      "End Step — Success 1": {
+        "type": "success"
+      },
+      "End Step — Success 2": {
+        "type": "success"
+      },
+      "Get Current Timestamp": {
+        "attributes": {
+          "variables": [
+            {
+              "name": "now",
+              "transforms": [],
+              "variableA.$": "$.now()"
+            }
+          ]
+        },
+        "nextStep": "Transfer to Default",
+        "type": "Mutation"
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.trigger.identity.id"
+        },
+        "description": null,
+        "nextStep": "Compare Strings",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Manager Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.getIdentity.attributes.manager"
+        },
+        "nextStep": "Transfer to Manager",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Transfer to Default": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "configType": "ACCESS_REQUESTS",
+            "endDate": null,
+            "reassignedFromId": "{{$.trigger.identity.id}}",
+            "reassignedToId": "68126d278b4c493badc68a0669c682f4",
+            "startDate": "{{$.getCurrentTimestamp.now}}"
+          },
+          "method": "post",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company2873-poc.api.identitynow-demo.com/beta/reassignment-configurations"
+        },
+        "nextStep": "End Step — Success 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Transfer to Manager": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "configType": "ACCESS_REQUESTS",
+            "endDate": null,
+            "reassignedFromId": "{{$.trigger.identity.id}}",
+            "reassignedToId": "{{$.getManagerIdentity.id}}",
+            "startDate": "{{$.now()}}"
+          },
+          "method": "post",
+          "oAuthClientId": "bafa9fbace164b86b494ffc99cf3d330",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company2873-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company2873-poc.api.identitynow-demo.com/beta/reassignment-configurations"
+        },
+        "nextStep": "End Step — Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Verify Data Type": {
+        "choiceList": [
+          {
+            "comparator": "IsPresent",
+            "nextStep": "Get Manager Identity",
+            "variableA.$": "$.getIdentity.attributes.manager"
+          }
+        ],
+        "defaultStep": "Get Current Timestamp",
+        "description": "Check if there is a manager",
+        "type": "choice"
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 1,
+  "failureCount": 1,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "attributeToFilter": "outOfOfficeStatus",
+      "filter.$": "$.changes[?(@.attribute == \"outOfOfficeStatus\")]",
+      "id": "idn:identity-attributes-changed"
+    }
+  }
+}
