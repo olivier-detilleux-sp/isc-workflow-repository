@@ -1,0 +1,423 @@
+{
+  "name": "Homonymous Detection",
+  "description": "This workflow can be used to detect any duplicated identities during the onboarding of a new Identity.",
+  "definition": {
+    "start": "Wait",
+    "steps": {
+      "Compare Boolean": {
+        "choiceList": [
+          {
+            "comparator": "BooleanEquals",
+            "nextStep": "Set LCS to Init",
+            "variableA.$": "$.form.formData.createANewIdentity",
+            "variableB": true
+          }
+        ],
+        "defaultStep": "Get New Account Id",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "FilterString used to filter previous account in the source",
+              "name": "filterString",
+              "transforms": [
+                {
+                  "id": "sp:transform:concatenate:string",
+                  "input": {
+                    "variableB": " || id == "
+                  }
+                },
+                {
+                  "id": "sp:transform:concatenate:string",
+                  "input": {
+                    "variableB.$": "$.getPreviousAccountId.body[0].attributes.id"
+                  }
+                }
+              ],
+              "variableA.$": "$.getPreviousSource.body.connectorAttributes.filterString"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Filter Previous Account",
+        "type": "Mutation"
+      },
+      "Filter Previous Account": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonPatchRequestBody": [
+            {
+              "op": "replace",
+              "path": "/connectorAttributes/filterString",
+              "value": "{{$.defineVariable.filterString}}"
+            }
+          ],
+          "method": "patch",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json-patch+json",
+          "requestHeaders": {
+            "Content-Type": "application/json-patch+json"
+          },
+          "textRequestBody": "",
+          "url": "https://company9706-poc.api.identitynow-demo.com/beta/sources/{{$.getPreviousIdentityDetails.body[0].source.id}}"
+        },
+        "description": "Filter the old account in the Source using filterString if filterString already had a value",
+        "nextStep": "Merge Identities",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Filter Previous Account 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonPatchRequestBody": [
+            {
+              "op": "add",
+              "path": "/connectorAttributes/filterString",
+              "value": "id == \"{{$.getPreviousAccountId.body[0].attributes.id}}\""
+            }
+          ],
+          "method": "patch",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json-patch+json",
+          "requestHeaders": {
+            "Content-Type": "application/json-patch+json"
+          },
+          "textRequestBody": "",
+          "url": "https://company9706-poc.api.identitynow-demo.com/beta/sources/{{$.getPreviousIdentityDetails.body[0].source.id}}"
+        },
+        "description": "Filter the old account in the Source using filterString if filterString was empty",
+        "displayName": "",
+        "nextStep": "Merge Identities",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Form": {
+        "actionId": "sp:forms",
+        "attributes": {
+          "deadline": "1h",
+          "formDefinitionId": "2f2e3207-94ea-4f35-abf5-cd3221af9cec",
+          "inputForForm_array_listOfIdentities.$": "$.fuzzySearch.body[*]",
+          "inputForForm_array_listOfIdentities_label": "$.displayName",
+          "inputForForm_array_listOfIdentities_subLabel": "$.name",
+          "inputForForm_array_listOfIdentities_value": "$.id",
+          "inputForForm_firstname.$": "$.trigger.attributes.firstname",
+          "inputForForm_identityName.$": "$.trigger.attributes.displayName",
+          "inputForForm_lastname.$": "$.trigger.attributes.lastname",
+          "notificationBody": "<h3>Hi, </h3> <br>\nDuring the onboarding of {{$.trigger.attributes.displayName}}, some potential homonymous have been detected. \nUse below form to decide wether this is a new Identity or an homonymous to be merged",
+          "notificationSubject": "Arbitration required for {{$.trigger.attributes.displayName}}",
+          "recipient": "3939490ebd5c468894363179636cdc04",
+          "reminder": "1h"
+        },
+        "description": "Sending form to manage arbitration",
+        "displayName": "",
+        "nextStep": "Compare Boolean",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Fuzzy Search": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "post",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "text",
+          "textRequestBody": "{\n    \"query\": {\n        \"query\": \"((attributes.lastname.exact:/.*{{$.trigger.attributes.lastname}}.*/ AND attributes.firstname.exact:/.*{{$.trigger.attributes.firstname}}.*/ ) OR (attributes.lastname:{{$.trigger.attributes.lastname}}~2 AND attributes.firstname:{{$.trigger.attributes.firstname}}~2 ) OR (attributes.firstname.exact:{{$.trigger.attributes.lastname}} AND attributes.lastname.exact:{{$.trigger.attributes.firstname}} )) AND ( NOT id:\\\"{{$.trigger.identity.id}}\\\")\" \n    },\n    \"indices\": [\n        \"identities\"\n    ],\n    \"sort\": [\n        \"displayName\"\n    ],\n    \"includeNested\": true\n}",
+          "url": "https://company9706-poc.api.identitynow-demo.com/v3/search"
+        },
+        "description": "Fuzzy search based on firstname and lastname and inverted",
+        "nextStep": "Verify Fuzzy Search Results",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Identity Details": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "post",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "text",
+          "requestHeaders": "Content-Type:application/json",
+          "textRequestBody": "{\n    \"query\": {\n        \"query\": \"id:\\\"{{$.trigger.identity.id}}\\\"\"\n    },\n    \"indices\": [\n        \"identities\"\n    ],\n    \"sort\": [\n        \"displayName\"\n    ],\n    \"includeNested\": true\n}",
+          "url": "https://company9706-poc.api.identitynow-demo.com/v3/search"
+        },
+        "description": "Search the new identity to get its HR Source. Cannot use Get Identity because it is not returning this information",
+        "nextStep": "Fuzzy Search",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get New Account Id": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": null,
+          "url": "https://company9706-poc.api.identitynow-demo.com/v3/accounts",
+          "urlParams": {
+            "filters": "identityId eq \"{{$.trigger.identity.id}}\" and sourceId eq \"{{$.getIdentityDetails.body[0].source.id}}\""
+          }
+        },
+        "description": "Search for the accountId of the account in the HR Source",
+        "nextStep": "Get Previous Identity Details",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Previous Account Id": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "url": "https://company9706-poc.api.identitynow-demo.com/v3/accounts",
+          "urlParams": {
+            "filters": "identityId eq \"{{$.getPreviousIdentityDetails.body[0].id}}\" and sourceId eq \"{{$.getPreviousIdentityDetails.body[0].source.id}}\""
+          }
+        },
+        "description": "Get old HR account id. This account has to be filtered in the old HR Source.",
+        "nextStep": "Verify Data Type",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Previous Identity Details": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "post",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "text",
+          "requestHeaders": "Content-Type:application/json",
+          "textRequestBody": "{\n    \"query\": {\n        \"query\": \"id:\\\"{{$.form.formData.identityToMerge}}\\\"\"\n    },\n    \"indices\": [\n        \"identities\"\n    ],\n    \"sort\": [\n        \"displayName\"\n    ],\n    \"includeNested\": true\n}",
+          "url": "https://company9706-poc.api.identitynow-demo.com/v3/search"
+        },
+        "description": "Search the new identity to get its HR Source. Cannot use Get Identity because it is not returning this information",
+        "displayName": "",
+        "nextStep": "Get Previous Source",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Previous Source": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "url": "https://company9706-poc.api.identitynow-demo.com/beta/sources/{{$.getPreviousIdentityDetails.body[0].source.id}}"
+        },
+        "description": "Get Source file for the old account.",
+        "nextStep": "Get Previous Account Id",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Merge Identities": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": [
+            [
+              {
+                "op": "replace",
+                "path": "/identityId",
+                "value": "{{$.form.formData.identityToMerge}}"
+              }
+            ]
+          ],
+          "method": "patch",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company9706-poc.api.identitynow-demo.com/v3/accounts/{{$.getNewAccountId.body[0].id}}"
+        },
+        "description": "Merge the new Identity with the old one by patching the account",
+        "nextStep": "Remove Previous Account",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Process Identity": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "identityIds": ["{{$.form.formData.identityToMerge}}"]
+          },
+          "method": "post",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company9706-poc.api.identitynow-demo.com/beta/identities/process"
+        },
+        "description": "Process the Identity",
+        "displayName": "",
+        "nextStep": "success 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Remove Previous Account": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": null,
+          "method": "post",
+          "oAuthClientId": "d39e803c1d6a4023b69e3c3e1a9ee7d4",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company9706-poc.api.identitynow-demo.com/beta/accounts/{{$.getPreviousAccountId.body[0].id}}/remove"
+        },
+        "description": "Remove the previous account",
+        "displayName": "",
+        "nextStep": "Process Identity",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Send Welcome Email": {
+        "actionId": "sp:send-email",
+        "attributes": {
+          "body": "<h3>Hi {{$.trigger.attributes.firstname}},</h3><br><br>\nWelcome in this \"Demo\" company. <br><br>\nBest,<br><br>\nYour IT team.",
+          "context": null,
+          "recipientEmailList": ["olivier.detilleux@sailpoint.com"],
+          "subject": "Welcome {{$.trigger.attributes.displayName}}"
+        },
+        "description": "Send welcome email",
+        "nextStep": "success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Set LCS to Arbitration": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "id": "{{$.trigger.identity.id}}",
+            "lifecycleState": "arbitration",
+            "profileId": "{{$.getIdentityDetails.body[0].identityProfile.id}}"
+          },
+          "method": "post",
+          "oAuthClientId": "05a83cc9-0783-4b4e-bd61-0923f733b58d",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company9706-poc.api.identitynow-demo.com/beta/workflows/execute/external/b422dba7-63fe-4846-80a1-1002c7f57699"
+        },
+        "description": "If Fuzzy search returns a result, it means there is maybe a duplicated but not sure. So better to ask someone for arbitration. Moving LCS to arbitration.",
+        "nextStep": "Form",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Set LCS to Init": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "id": "{{$.trigger.identity.id}}",
+            "lifecycleState": "init",
+            "profileId": "{{$.getIdentityDetails.body[0].identityProfile.id}}"
+          },
+          "method": "post",
+          "oAuthClientId": "05a83cc9-0783-4b4e-bd61-0923f733b58d",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company9706-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company9706-poc.api.identitynow-demo.com/beta/workflows/execute/external/b422dba7-63fe-4846-80a1-1002c7f57699"
+        },
+        "description": "If it is a brand new identity, LCS is changed to init. Then uniqueID is generated and identity is enabled",
+        "nextStep": "Send Welcome Email",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Verify Data Type": {
+        "choiceList": [
+          {
+            "comparator": "IsPresent",
+            "nextStep": "Define Variable",
+            "variableA.$": "$.getPreviousSource.body.connectorAttributes.filterString"
+          }
+        ],
+        "defaultStep": "Filter Previous Account 1",
+        "description": "Test if there is already a filterstring on the source",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Verify Fuzzy Search Results": {
+        "choiceList": [
+          {
+            "comparator": "IsPresent",
+            "nextStep": "Set LCS to Arbitration",
+            "variableA.$": "$.fuzzySearch.body[0].attributes.uid"
+          }
+        ],
+        "defaultStep": "Set LCS to Init",
+        "description": null,
+        "type": "choice"
+      },
+      "Wait": {
+        "actionId": "sp:sleep",
+        "attributes": {
+          "date": "",
+          "duration": "1m",
+          "type": "waitFor"
+        },
+        "description": "Wait for the identity to be fully created",
+        "displayName": "",
+        "nextStep": "Get Identity Details",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "success": {
+        "type": "success"
+      },
+      "success 1": {
+        "type": "success"
+      }
+    }
+  },
+  "creator": {
+    "type": "IDENTITY",
+    "id": "3939490ebd5c468894363179636cdc04",
+    "name": "olivier.detilleux"
+  },
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "id": "idn:identity-created"
+    }
+  }
+}

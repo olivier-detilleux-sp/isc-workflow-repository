@@ -1,0 +1,221 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "2f2e3207-94ea-4f35-abf5-cd3221af9cec",
+      "name": "Arbitration Form"
+    },
+    "object": {
+      "id": "2f2e3207-94ea-4f35-abf5-cd3221af9cec",
+      "name": "Arbitration Form",
+      "description": "This form is presented to the manager in case there is a new joiner that is quite similar to an existing identity. Manager can choose to create a new Identity or to merge with an existing one",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "3939490ebd5c468894363179636cdc04",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [
+        {
+          "type": "WORKFLOW",
+          "id": "166f1768-d72e-43ad-b15d-83e90bae14a2",
+          "name": "Homonymous Detection"
+        }
+      ],
+      "formInput": [
+        {
+          "id": "identityName",
+          "type": "STRING",
+          "label": "identityName",
+          "description": "Identity Name of the new Identity"
+        },
+        {
+          "id": "listOfIdentities",
+          "type": "ARRAY",
+          "label": "listOfIdentities",
+          "description": "List of potential identities to merge with"
+        },
+        {
+          "id": "firstname",
+          "type": "STRING",
+          "label": "firstname",
+          "description": "Firstname of the new identity"
+        },
+        {
+          "id": "lastname",
+          "type": "STRING",
+          "label": "lastname",
+          "description": "Lastname of the new Identity"
+        }
+      ],
+      "formElements": [
+        {
+          "id": "1407315453258",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "A new Identity has been created that might already exists. Use this form to enforce the creation of a new Identity or to merge the new Identity with an existing one",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Firstname",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "864509262286",
+                        "key": "firstname",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Lastname",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1534877998283",
+                        "key": "lastname",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Identity Attributes",
+                  "labelStyle": "h5",
+                  "showLabel": true
+                },
+                "elementType": "COLUMN_SET",
+                "id": "1308264270307",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": true,
+                  "falseLabel": "No",
+                  "helpText": "Do you want to create a new Identity or to Merge with an existing one ?",
+                  "label": "Create a New Identity",
+                  "trueLabel": "Yes"
+                },
+                "elementType": "TOGGLE",
+                "id": "266430350666",
+                "key": "createANewIdentity",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "listOfIdentities",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "Please choose the identity you want to merge with",
+                  "label": "Identity to Merge",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1368312304073",
+                "key": "identityToMerge",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "Homonymous Arbitration for {{$.form.input.identityName}} ",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "identityName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "864509262286"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1534877998283"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "firstname",
+                "element": "864509262286"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "lastname",
+                "element": "1534877998283"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "ELEMENT",
+              "source": "createANewIdentity",
+              "operator": "EQ",
+              "valueType": "BOOLEAN",
+              "value": "true"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "HIDE",
+              "config": {
+                "element": "1368312304073"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2024-05-23T16:26:12.799058092Z",
+      "modified": "2024-05-29T08:23:39.269597479Z"
+    }
+  }
+]
