@@ -1,0 +1,221 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "3aacdd4a-3c4b-4bf5-8faa-0e513b930962",
+      "name": "Identity Management : Select Identity"
+    },
+    "object": {
+      "id": "3aacdd4a-3c4b-4bf5-8faa-0e513b930962",
+      "name": "Identity Management : Select Identity",
+      "description": "",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "822f6025190442eaa1757f20ba58da7c",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "identities",
+          "type": "ARRAY",
+          "label": "identities",
+          "description": ""
+        },
+        {
+          "id": "searchCriteria",
+          "type": "STRING",
+          "label": "searchCriteria",
+          "description": "give the name of the search criteria (either a Support Team or Manager)"
+        }
+      ],
+      "formElements": [
+        {
+          "id": "158222909951",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "identities",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Select Identity (Manager)",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "789288431919",
+                "key": "selectIdentity",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "aggregationBucketField": "attributes.displayName",
+                      "filters": {
+                        "attributes.locationCode": {
+                          "exclude": false,
+                          "value": "EMEA"
+                        }
+                      },
+                      "indices": [
+                        "identities"
+                      ],
+                      "query": "*"
+                    },
+                    "dataSourceType": "SEARCH"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Select Identity (EMEA Support)",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "701161201378",
+                "key": "selectIdentity",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "aggregationBucketField": "attributes.displayName",
+                      "filters": {
+                        "attributes.brand": {
+                          "exclude": false,
+                          "value": "Gucci"
+                        },
+                        "attributes.locationCode": {
+                          "exclude": false,
+                          "value": "EMEA"
+                        }
+                      },
+                      "indices": [
+                        "identities"
+                      ],
+                      "query": "*"
+                    },
+                    "dataSourceType": "SEARCH"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Select Identity (Gucci EMEA Support)",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "492165079941",
+                "key": "selectIdentity",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "Section",
+            "labelStyle": "h2",
+            "showLabel": false
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "searchCriteria",
+              "operator": "EQ",
+              "valueType": "STRING",
+              "value": "EMEA Support"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "701161201378"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "searchCriteria",
+              "operator": "EQ",
+              "valueType": "STRING",
+              "value": "Gucci EMEA Support"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "492165079941"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "searchCriteria",
+              "operator": "EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "789288431919"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-10-13T14:18:42.632288681Z",
+      "modified": "2025-11-27T10:53:15.062521238Z"
+    }
+  }
+]

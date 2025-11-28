@@ -1,0 +1,110 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "7fe5d48b-8184-4c5d-b370-219972bb938f",
+      "name": "Duplicate Contractor"
+    },
+    "object": {
+      "id": "7fe5d48b-8184-4c5d-b370-219972bb938f",
+      "name": "Duplicate Contractor",
+      "description": "",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "a74d98c936c44da6a927f562eb1afdc6",
+        "name": "fadoua.abaida"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "identities",
+          "type": "ARRAY",
+          "label": "identities",
+          "description": ""
+        }
+      ],
+      "formElements": [
+        {
+          "id": "1517024686764",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": false,
+                  "falseLabel": "No, use an existing identity",
+                  "helpText": "Use this field to capture yes/no responses",
+                  "label": "create a new identity",
+                  "trueLabel": "Yes"
+                },
+                "elementType": "TOGGLE",
+                "id": "833062985038",
+                "key": "createANewIdentity",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "identities",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Potential duplicated identities",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "449340940154",
+                "key": "potentialDuplicatedIdentities",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "potential duplicate",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "ELEMENT",
+              "source": "createANewIdentity",
+              "operator": "EQ",
+              "valueType": "BOOLEAN",
+              "value": "false"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "449340940154"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-10-16T13:23:03.290311627Z",
+      "modified": "2025-10-16T13:29:07.282797476Z"
+    }
+  }
+]

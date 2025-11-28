@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "timestamp": "2025-11-28T16:52:35.934245639Z",
+  "tenant": "beta-17336",
+  "description": "Export Job vscode 2025-11-28T16:52:27.549Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "TRANSFORM"
+    ],
+    "objectOptions": {
+      "TRANSFORM": {
+        "includedNames": [],
+        "includedIds": [
+          "7f7fc0e1-a04f-4fd4-b363-ac7328ae8db9"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "7f7fc0e1-a04f-4fd4-b363-ac7328ae8db9",
+        "name": "Calculate Employee Brand",
+        "type": "TRANSFORM"
+      },
+      "object": {
+        "id": "7f7fc0e1-a04f-4fd4-b363-ac7328ae8db9",
+        "name": "Calculate Employee Brand",
+        "type": "static",
+        "attributes": {
+          "oldBrand": {
+            "type": "firstValid",
+            "attributes": {
+              "values": [
+                {
+                  "type": "identityAttribute",
+                  "attributes": {
+                    "name": "organization"
+                  }
+                },
+                {
+                  "type": "accountAttribute",
+                  "attributes": {
+                    "sourceName": "HR",
+                    "attributeName": "brand"
+                  }
+                }
+              ],
+              "ignoreErrors": true
+            }
+          },
+          "newBrand": {
+            "type": "accountAttribute",
+            "attributes": {
+              "sourceName": "HR",
+              "attributeName": "brand"
+            }
+          },
+          "lifeCycleState": {
+            "type": "firstValid",
+            "attributes": {
+              "values": [
+                {
+                  "type": "identityAttribute",
+                  "attributes": {
+                    "name": "cloudLifecycleState"
+                  }
+                },
+                {
+                  "type": "lower",
+                  "attributes": {
+                    "input": {
+                      "type": "accountAttribute",
+                      "attributes": {
+                        "sourceName": "HR",
+                        "attributeName": "lc_state"
+                      }
+                    }
+                  }
+                }
+              ],
+              "ignoreErrors": false
+            }
+          },
+          "value": "#if($lifeCycleState== 'crossBrandMoveApproved' || $lifeCycleState == 'crossBrandMoveRejected')$newBrand#{else}$oldBrand#end"
+        },
+        "internal": false
+      }
+    }
+  ]
+}

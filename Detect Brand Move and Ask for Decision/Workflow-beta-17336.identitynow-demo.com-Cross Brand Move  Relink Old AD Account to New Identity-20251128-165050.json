@@ -1,0 +1,129 @@
+{
+  "id": "2fc87c5a-2399-437e-9308-284b67cf452e",
+  "name": "Cross Brand Move : Relink Old AD Account to New Identity",
+  "description": "After a cross brand move, the old AD account must be relinked to the temporary NELM identity that has been created.",
+  "definition": {
+    "start": "Get Accounts",
+    "steps": {
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "oldAccountId",
+              "transforms": [],
+              "variableA.$": "$.getAccounts.accounts[?(@.sourceName == \"Disabled Employees\")].attributes.oldaccountid"
+            },
+            {
+              "description": "",
+              "name": "oldIdentityId",
+              "transforms": [],
+              "variableA.$": "$.getAccounts.accounts[?(@.sourceName == \"Disabled Employees\")].attributes.oldidentityid"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Get Accounts": {
+        "actionId": "sp:get-accounts",
+        "attributes": {
+          "getAccountsBy": "specificIdentity",
+          "identity.$": "$.trigger.identity.id"
+        },
+        "displayName": "",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonPatchRequestBody": null,
+          "jsonRequestBody": [
+            [
+              {
+                "op": "replace",
+                "path": "/identityId",
+                "value": "{{$.trigger.identity.id}}"
+              }
+            ]
+          ],
+          "method": "patch",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v3/accounts/{{$.defineVariable.oldAccountId}}"
+        },
+        "catch": [
+          {
+            "next": "Send Email"
+          }
+        ],
+        "displayName": "Relink AD Account",
+        "nextStep": "HTTP Request 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "id": "{{$.defineVariable.oldIdentityId}}",
+            "lifecycleState": "crossBrandMoveRejected"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/beta/workflows/execute/external/19178ca8-2a4b-483d-bedf-568883a75430"
+        },
+        "displayName": "Set LCS to CrossBrandMoveRejected",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Send Email": {
+        "actionId": "sp:send-email",
+        "attributes": {
+          "body": "<p>Relinking account for {{$.trigger.attributes.displayName}} has failed with error {{$.hTTPRequest.statusCode}}</p>",
+          "context": {},
+          "recipientEmailList": [
+            "olivier.detilleux@sailpoint.com"
+          ],
+          "subject": "AD Account Relink : failed"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      }
+    }
+  },
+  "enabled": true,
+  "executionCount": 11,
+  "failureCount": 1,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "StringEquals": "",
+      "filter.$": "$.attributes[?(@.cloudLifecycleState == \"archived\")]",
+      "id": "idn:identity-created",
+      "operatorToFilter": "StringEquals"
+    }
+  }
+}

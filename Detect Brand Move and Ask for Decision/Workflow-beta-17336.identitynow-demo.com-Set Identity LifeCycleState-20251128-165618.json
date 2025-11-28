@@ -1,0 +1,79 @@
+{
+  "id": "19178ca8-2a4b-483d-bedf-568883a75430",
+  "name": "Set Identity LifeCycleState",
+  "description": "Set the LifeCycleState for an identity",
+  "definition": {
+    "start": "List LifecycleStates",
+    "steps": {
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "LifecycleState Id in the identity profile",
+              "name": "lifecycleStateId",
+              "transforms": [],
+              "variableA.$": "$.listLifecycleStates.body[?(@.technicalName == \"{{$.trigger.lifecycleState}}\")].id"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Set LifecycleState",
+        "type": "Mutation"
+      },
+      "List LifecycleStates": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "url": "https://beta-17336.api.identitynow-demo.com/beta/identity-profiles/36b940d028b64c6e955a963f1e6ab22e/lifecycle-states/"
+        },
+        "description": "List the lifecycleStates for a specific profile id",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Set LifecycleState": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "lifecycleStateId": "{{$.defineVariable.lifecycleStateId}}"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/beta/identities/{{$.trigger.id}}/set-lifecycle-state"
+        },
+        "description": "Set lifecycleState",
+        "nextStep": "success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "success": {
+        "actionId": "sp:operator-success",
+        "type": "success"
+      }
+    }
+  },
+  "enabled": true,
+  "executionCount": 823,
+  "failureCount": 270,
+  "trigger": {
+    "type": "EXTERNAL",
+    "attributes": {
+      "clientId": "13933f987be44026b5baa7789c5398d9",
+      "description": "Get the id of the identity, the id of the identity profile and the name of the lifecycle state to be changed",
+      "id": "idn:external-http",
+      "url": "/beta/workflows/execute/external/19178ca8-2a4b-483d-bedf-568883a75430"
+    }
+  }
+}

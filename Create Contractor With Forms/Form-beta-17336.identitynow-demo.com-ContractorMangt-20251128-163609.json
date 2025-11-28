@@ -1,0 +1,432 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "fca9f818-a974-4d81-a4f8-4930e94d39ba",
+      "name": "ContractorMangt"
+    },
+    "object": {
+      "id": "fca9f818-a974-4d81-a4f8-4930e94d39ba",
+      "name": "ContractorMangt",
+      "description": "",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "a74d98c936c44da6a927f562eb1afdc6",
+        "name": "fadoua.abaida"
+      },
+      "usedBy": [],
+      "formInput": [],
+      "formElements": [
+        {
+          "id": "435036135863",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "First name",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "TEXT",
+                        "id": "626530464072",
+                        "key": "firstName",
+                        "validations": [
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "formatAsYouType": true,
+                          "helpText": "",
+                          "internationalized": true,
+                          "label": "Phone number",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "PHONE",
+                        "id": "1388631840529",
+                        "key": "phoneNumber",
+                        "validations": [
+                          {
+                            "validationType": "PHONE"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Last name",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "TEXT",
+                        "id": "1694453453355",
+                        "key": "lastName",
+                        "validations": [
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "External email address",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "EMAIL",
+                        "id": "814915743435",
+                        "key": "externalEmailAddress",
+                        "validations": [
+                          {
+                            "validationType": "EMAIL"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "13004899543",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "options": [
+                        {
+                          "label": "wavestone",
+                          "sublabel": "",
+                          "value": "wavestone"
+                        },
+                        {
+                          "label": "accenture",
+                          "sublabel": "",
+                          "value": "accenture"
+                        },
+                        {
+                          "label": "synetis",
+                          "sublabel": "",
+                          "value": "synetis"
+                        }
+                      ]
+                    },
+                    "dataSourceType": "STATIC"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Company name",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1507901306538",
+                "key": "companyName",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "General info",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "147045183876",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "dataSource": {
+                            "config": {
+                              "aggregationBucketField": "attributes.brand",
+                              "indices": [
+                                "identities"
+                              ],
+                              "label": "",
+                              "query": "attributes.cloudLifecycleState:active",
+                              "sublabel": "",
+                              "value": ""
+                            },
+                            "dataSourceType": "SEARCH"
+                          },
+                          "forceSelect": true,
+                          "helpText": "",
+                          "label": "Brand",
+                          "maximum": 1,
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "SELECT",
+                        "id": "245165664442",
+                        "key": "brand",
+                        "validations": [
+                          {
+                            "validationType": "DATA_SOURCE"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "dataSource": {
+                            "config": {
+                              "aggregationBucketField": "attributes.country",
+                              "filters": {
+                                "attributes.brand": {
+                                  "exclude": false,
+                                  "value": "{{$.form.data.brand}}"
+                                }
+                              },
+                              "indices": [
+                                "identities"
+                              ],
+                              "label": "",
+                              "query": "attributes.cloudLifecycleState:active",
+                              "sublabel": "",
+                              "value": ""
+                            },
+                            "dataSourceType": "SEARCH"
+                          },
+                          "forceSelect": true,
+                          "helpText": "",
+                          "label": "Country",
+                          "maximum": 1,
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "SELECT",
+                        "id": "645659339255",
+                        "key": "country",
+                        "validations": [
+                          {
+                            "validationType": "DATA_SOURCE"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "1605163223577",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "options": [
+                        {
+                          "label": "Retail",
+                          "sublabel": "",
+                          "value": "Retail"
+                        },
+                        {
+                          "label": "Office",
+                          "sublabel": "",
+                          "value": "Office"
+                        },
+                        {
+                          "label": "Industrial",
+                          "sublabel": "",
+                          "value": "Industrial"
+                        }
+                      ]
+                    },
+                    "dataSourceType": "STATIC"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "User Location",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1753147801882",
+                "key": "userLocation",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "objectType": "IDENTITY"
+                    },
+                    "dataSourceType": "INTERNAL"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Sponsor",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1402234402261",
+                "key": "sponsor",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Start date",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "DATE",
+                        "id": "1206784469021",
+                        "key": "startDate",
+                        "validations": [
+                          {
+                            "validationType": "DATE"
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "End date",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "DATE",
+                        "id": "412813709178",
+                        "key": "endDate",
+                        "validations": [
+                          {
+                            "validationType": "DATE"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "1024389430871",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Mission",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "801413016994",
+                "key": "mission",
+                "validations": []
+              }
+            ],
+            "label": "Assignement Overview",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [],
+      "created": "2025-10-16T12:36:32.537508325Z",
+      "modified": "2025-10-16T12:51:10.781619669Z"
+    }
+  }
+]

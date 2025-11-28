@@ -1,0 +1,393 @@
+{
+  "id": "2c42d0bc-f0c4-4a9d-8b09-5eac092aa70d",
+  "name": "Identity Management",
+  "description": "Manage Identity Attributes",
+  "definition": {
+    "start": "HTTP Request 3",
+    "steps": {
+      "Compare Strings": {
+        "actionId": "sp:compare-strings",
+        "choiceList": [
+          {
+            "comparator": "StringEquals",
+            "nextStep": "HTTP Request 4",
+            "variableA.$": "$.getIdentity.attributes.type",
+            "variableB": "Employee"
+          }
+        ],
+        "defaultStep": "HTTP Request 2",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "endDate",
+              "transforms": [
+                {
+                  "id": "sp:transform:formatDate:string",
+                  "input": {
+                    "dateFormat": "MM/DD/YYYY",
+                    "style": "medium",
+                    "timeFormat": "none"
+                  }
+                }
+              ],
+              "variableA.$": "$.getIdentity.attributes.endDate"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Interactive Form 1",
+        "type": "Mutation"
+      },
+      "Define Variable 1": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "newDate",
+              "transforms": [
+                {
+                  "id": "sp:transform:addTime:time",
+                  "input": {
+                    "length.$": "$.interactiveForm1.formData.extensionPeriod",
+                    "unit": "months"
+                  }
+                }
+              ],
+              "variableA.$": "$.getIdentity.attributes.endDate"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request 1",
+        "type": "Mutation"
+      },
+      "Define Variable 2": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "country",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest1.body.previewAttributes[?(@.name == \"country\")].value"
+            },
+            {
+              "description": "",
+              "name": "userLocation",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest1.body.previewAttributes[?(@.name == \"userLocation\")].value"
+            },
+            {
+              "description": "",
+              "name": "endDate",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest1.body.previewAttributes[?(@.name == \"endDate\")].value"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Compare Strings",
+        "type": "Mutation"
+      },
+      "Define Variable 3": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "Support Team",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest3.body[0].access[?(@.source.name == \"ISC Governance\" && @.name =~ /.*Support/i)].name"
+            }
+          ]
+        },
+        "displayName": "Set Support Team Variable",
+        "nextStep": "Get List of Identities",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Get Accounts": {
+        "actionId": "sp:get-accounts",
+        "attributes": {
+          "filterCriteria": "nativeIdentity",
+          "getAccountsBy": "filters",
+          "operator": "eq",
+          "value.$": "$.getIdentity.attributes.uid"
+        },
+        "description": null,
+        "displayName": "",
+        "nextStep": "Define Variable 1",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.getListOfIdentities1.identities[0].id"
+        },
+        "displayName": "",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get List of Identities": {
+        "actionId": "sp:get-identities",
+        "attributes": {
+          "inputManagedBy.$": "",
+          "inputManagerOf.$": "$.trigger.launchedBy.id",
+          "inputQuery": "attributes.type:Contractor",
+          "searchBy": "searchQuery"
+        },
+        "displayName": "",
+        "nextStep": "Interactive Form",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get List of Identities 1": {
+        "actionId": "sp:get-identities",
+        "attributes": {
+          "inputQuery": "attributes.displayName.exact:\"{{$.interactiveForm.formData.selectIdentity}}\" OR id.exact:\"{{$.interactiveForm.formData.selectIdentity}}\" ",
+          "searchBy": "searchQuery"
+        },
+        "displayName": "",
+        "nextStep": "Get Identity",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "csvRequestBody": null,
+          "jsonPatchRequestBody": null,
+          "jsonRequestBody": {
+            "identityAttributeConfig": {
+              "attributeTransforms": [
+                {
+                  "identityAttributeName": "country",
+                  "transformDefinition": {
+                    "attributes": {
+                      "id": "IM - Get Country Value",
+                      "input": "{{$.interactiveForm1.formData.newCountry}}"
+                    },
+                    "type": "reference"
+                  }
+                },
+                {
+                  "identityAttributeName": "userLocation",
+                  "transformDefinition": {
+                    "attributes": {
+                      "id": "IM - Get User Location Value",
+                      "input": "{{$.interactiveForm1.formData.newUserLocation}}"
+                    },
+                    "type": "reference"
+                  }
+                },
+                {
+                  "identityAttributeName": "endDate",
+                  "transformDefinition": {
+                    "attributes": {
+                      "id": "IM - Get End Date Value",
+                      "input": "{{$.defineVariable1.newDate}}"
+                    },
+                    "type": "reference"
+                  }
+                }
+              ],
+              "enabled": true
+            },
+            "identityId": "{{$.getIdentity.id}}"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2024/identity-profiles/identity-preview"
+        },
+        "displayName": "",
+        "nextStep": "Define Variable 2",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 2": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "csvRequestBody": null,
+          "jsonPatchRequestBody": [
+            {
+              "op": "replace",
+              "path": "/attributes/country",
+              "value": "{{$.defineVariable2.country}}"
+            },
+            {
+              "op": "replace",
+              "path": "/attributes/userLocation",
+              "value": "{{$.defineVariable2.userLocation}}"
+            },
+            {
+              "op": "replace",
+              "path": "/attributes/endDate",
+              "value": "{{$.defineVariable2.endDate}}"
+            }
+          ],
+          "jsonRequestBody": null,
+          "method": "patch",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json-patch+json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2024/accounts/{{$.getAccounts.accounts[?(@.sourceId == \"e9cd14960ca34ef791511d42a9b372ad\")].id}}"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 3": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "csvRequestBody": null,
+          "jsonPatchRequestBody": null,
+          "jsonRequestBody": {
+            "indices": [
+              "identities"
+            ],
+            "query": {
+              "query": "{{$.trigger.launchedBy.id}}"
+            }
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/search"
+        },
+        "description": null,
+        "displayName": "Get Support Team Group",
+        "nextStep": "Define Variable 3",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 4": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "csvRequestBody": null,
+          "jsonPatchRequestBody": null,
+          "jsonRequestBody": {
+            "attributes": {
+              "country": null,
+              "id": "{{$.getIdentity.id}}",
+              "name": "{{$.getIdentity.attributes.uid}}",
+              "segment": null,
+              "sourceId": "a65ce229dbac4107a2eefdfbe9dc89e3",
+              "userLocation": "{{$.defineVariable2.userLocation}}"
+            }
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2024/accounts"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Interactive Form": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "3aacdd4a-3c4b-4bf5-8faa-0e513b930962",
+          "inputForForm_array_identities.$": "$.getListOfIdentities.identities",
+          "inputForForm_array_identities_label": "$.attributes.uid",
+          "inputForForm_array_identities_subLabel": "$.email",
+          "inputForForm_array_identities_value": "$.id",
+          "inputForForm_searchCriteria.$": "$.defineVariable3.supportTeam",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Select an Identity to update"
+        },
+        "displayName": "",
+        "nextStep": "Get List of Identities 1",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Form 1": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "7a8b71e3-b7e2-4ed2-bf2c-63bce833d9cd",
+          "inputForForm_array_extensionPeriod": [
+            {
+              "id": "1",
+              "name": "1 month"
+            },
+            {
+              "id": "6",
+              "name": "6 months"
+            },
+            {
+              "id": "12",
+              "name": "12 months"
+            }
+          ],
+          "inputForForm_array_extensionPeriod_label": "$.name",
+          "inputForForm_array_extensionPeriod_value": "$.id",
+          "inputForForm_brand.$": "$.getIdentity.attributes.brand",
+          "inputForForm_country.$": "$.getIdentity.attributes.country",
+          "inputForForm_emailAddress.$": "$.getIdentity.attributes.email",
+          "inputForForm_employeeType.$": "$.getIdentity.attributes.type",
+          "inputForForm_endDate.$": "$.defineVariable.endDate",
+          "inputForForm_firstName.$": "$.getIdentity.attributes.firstname",
+          "inputForForm_lastName.$": "$.getIdentity.attributes.lastname",
+          "inputForForm_userLocation.$": "$.getIdentity.attributes.userLocation",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Identity Details"
+        },
+        "displayName": "",
+        "nextStep": "Get Accounts",
+        "type": "action",
+        "versionNumber": 1
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 20,
+  "failureCount": 13,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.workflowId == '2c42d0bc-f0c4-4a9d-8b09-5eac092aa70d')]",
+      "id": "idn:interactive-process-launched"
+    }
+  }
+}

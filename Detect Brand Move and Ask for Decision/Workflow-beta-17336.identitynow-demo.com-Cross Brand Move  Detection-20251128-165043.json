@@ -1,0 +1,230 @@
+{
+  "id": "ee911695-738e-4a29-9704-66a701c76266",
+  "name": "Cross Brand Move : Detection",
+  "description": "Trigger a workflow to ask for a decision about a cross brand move : keep existing account or create a new account",
+  "definition": {
+    "start": "HTTP Request 2",
+    "steps": {
+      "Compare Strings": {
+        "actionId": "sp:compare-strings",
+        "choiceList": [
+          {
+            "comparator": "StringEquals",
+            "nextStep": "HTTP Request",
+            "variableA.$": "$.form.formData.decision",
+            "variableB": "Move Existing Account"
+          }
+        ],
+        "defaultStep": "Define Variable",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "startDate",
+              "transforms": [],
+              "variableA.$": "$.now()"
+            },
+            {
+              "description": "",
+              "name": "endDate",
+              "transforms": [
+                {
+                  "id": "sp:transform:addTime:time",
+                  "input": {
+                    "length": 7,
+                    "unit": "days"
+                  }
+                }
+              ],
+              "variableA.$": "$.now()"
+            },
+            {
+              "description": "",
+              "name": "oldAccountId",
+              "transforms": [],
+              "variableA.$": "$.getAccounts.accounts[?(@.sourceName == \"Active Directory\")].id"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Get Identity 1",
+        "type": "Mutation"
+      },
+      "End Step - Failure": {
+        "actionId": "sp:operator-failure",
+        "displayName": "",
+        "failureName": "Get Identity",
+        "type": "failure"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Form": {
+        "actionId": "sp:forms",
+        "attributes": {
+          "deadline": "1d",
+          "formDefinitionId": "c8bc6b59-6d22-49cd-bb6a-86720db81a2b",
+          "inputForForm_currentBrand.$": "$.getIdentity.attributes.organization",
+          "inputForForm_currentCountry.$": "$.getIdentity.attributes.country",
+          "inputForForm_firstName.$": "$.getIdentity.attributes.firstname",
+          "inputForForm_lastName.$": "$.getIdentity.attributes.lastname",
+          "inputForForm_targetBrand.$": "$.getAccounts.accounts[?(@.sourceName == \"HR\")].attributes.brand",
+          "inputForForm_targetCountry.$": "$.getAccounts.accounts[?(@.sourceName == \"HR\")].attributes.country",
+          "notificationBody": "A cross brand move has been detected for {{$.trigger.identity.name}} and is waiting for your decision. Open this form to submit your decision.",
+          "notificationSubject": "Cross Brand Move detected for {{$.trigger.identity.name}}",
+          "recipient": "822f6025190442eaa1757f20ba58da7c",
+          "reminder": "1d"
+        },
+        "displayName": "Ask for Exception",
+        "nextStep": "Compare Strings",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Get Accounts": {
+        "actionId": "sp:get-accounts",
+        "attributes": {
+          "getAccountsBy": "specificIdentity",
+          "identity.$": "$.trigger.identity.id"
+        },
+        "displayName": "",
+        "nextStep": "Form",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.trigger.identity.id"
+        },
+        "catch": [
+          {
+            "next": "Send Email"
+          }
+        ],
+        "displayName": "",
+        "nextStep": "Get Accounts",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Identity 1": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.getIdentity.managerRef.id"
+        },
+        "displayName": "Get Manager Identity",
+        "nextStep": "HTTP Request 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "id": "{{$.trigger.identity.id}}",
+            "lifecycleState": "crossBrandMoveApproved"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/beta/workflows/execute/external/19178ca8-2a4b-483d-bedf-568883a75430"
+        },
+        "description": "Set LCS to crossBrandMoveDecisionSubmitted",
+        "displayName": "Approve Cross Brand Move",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "accountName": "{{$.getIdentity.attributes.uid}}_disabled",
+            "data": {
+              "brand": "{{$.getIdentity.attributes.organization}}",
+              "country": "{{$.getIdentity.attributes.country}}",
+              "department": "{{$.getIdentity.attributes.department}}",
+              "oldaccountid": "{{$.defineVariable.oldAccountId}}",
+              "oldidentityid": "{{$.getIdentity.id}}"
+            },
+            "email": "disabled_{{$.getIdentity.attributes.email}}",
+            "endDate": "{{$.defineVariable.endDate}}",
+            "firstName": "{{$.getIdentity.attributes.firstname}}",
+            "lastName": "{{$.getIdentity.attributes.lastname}}",
+            "manager": "{{$.getIdentity1.attributes.uid}}",
+            "phone": "+33123456789",
+            "sourceId": "e9666c240ace4a3680a44ecc60da8210",
+            "startDate": "{{$.defineVariable.startDate}}"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthScope": null,
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/non-employee-records"
+        },
+        "description": "Create a temporary identity to keep the old account and manage its lifecycle",
+        "displayName": "Create Temporary Disabled Identity",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 2": {
+        "actionId": "sp:http",
+        "attributes": {
+          "jsonRequestBody": {
+            "trigger": "{{$.trigger.oldLifecycleState}}"
+          },
+          "method": "post",
+          "requestContentType": "json",
+          "url": "https://webhook.site/92bb41a2-eae1-4140-a550-3be04a091dd9"
+        },
+        "displayName": "",
+        "nextStep": "Get Identity",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Send Email": {
+        "actionId": "sp:send-email",
+        "attributes": {
+          "body": "",
+          "context": {},
+          "from": null,
+          "recipientEmailList": [
+            "marie.comon@kering.com"
+          ],
+          "subject": "error"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Failure",
+        "type": "action",
+        "versionNumber": 2
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 330,
+  "failureCount": 319,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.newLifecycleState == \"pendingCrossBrandMove\")]",
+      "id": "idn:identity-lifecycle-state-changed"
+    }
+  }
+}

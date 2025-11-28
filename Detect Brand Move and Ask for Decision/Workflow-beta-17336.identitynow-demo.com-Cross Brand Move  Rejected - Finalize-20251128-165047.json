@@ -1,0 +1,135 @@
+{
+  "id": "6df5a90c-8e6b-4ff8-81a2-f2c722808fe8",
+  "name": "Cross Brand Move : Rejected - Finalize",
+  "description": "After a cross brand move has been rejected, move the old identity in the appropriate LCS",
+  "definition": {
+    "start": "Define Variable 1",
+    "steps": {
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "lcs",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest.body.previewAttributes[?(@.name == \"cloudLifecycleState\")].value"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request 1",
+        "type": "Mutation"
+      },
+      "Define Variable 1": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "delay",
+              "transforms": [
+                {
+                  "id": "sp:transform:addTime:time",
+                  "input": {
+                    "length": 10,
+                    "unit": "seconds"
+                  }
+                }
+              ],
+              "variableA.$": "$.now()"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Wait",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "identityAttributeConfig": {
+              "attributeTransforms": [
+                {
+                  "identityAttributeName": "cloudLifecycleState",
+                  "transformDefinition": {
+                    "attributes": {
+                      "id": "Calculate LifeCycleState"
+                    },
+                    "type": "reference"
+                  }
+                }
+              ],
+              "enabled": true
+            },
+            "identityId": "{{$.trigger.identity.id}}"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/beta/identity-profiles/identity-preview"
+        },
+        "displayName": "",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "id": "{{$.trigger.identity.id}}",
+            "lifecycleState": "{{$.defineVariable.lcs}}"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/beta/workflows/execute/external/19178ca8-2a4b-483d-bedf-568883a75430"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Wait": {
+        "actionId": "sp:sleep",
+        "attributes": {
+          "date.$": "$.defineVariable1.delay",
+          "duration": null,
+          "time.$": "$.defineVariable1.delay",
+          "type": "waitUntil"
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request",
+        "type": "action",
+        "versionNumber": 1
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 6,
+  "failureCount": 0,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.newState.name == \"crossBrandMoveRejected\")]",
+      "id": "idn:identity-lifecycle-state-change-processed"
+    }
+  }
+}

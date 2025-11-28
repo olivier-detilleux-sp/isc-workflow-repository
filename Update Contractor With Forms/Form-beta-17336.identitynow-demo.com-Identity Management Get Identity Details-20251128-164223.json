@@ -1,0 +1,715 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "7a8b71e3-b7e2-4ed2-bf2c-63bce833d9cd",
+      "name": "Identity Management: Get Identity Details"
+    },
+    "object": {
+      "id": "7a8b71e3-b7e2-4ed2-bf2c-63bce833d9cd",
+      "name": "Identity Management: Get Identity Details",
+      "description": "",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "822f6025190442eaa1757f20ba58da7c",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "userLocation",
+          "type": "STRING",
+          "label": "userLocation",
+          "description": ""
+        },
+        {
+          "id": "firstName",
+          "type": "STRING",
+          "label": "firstName",
+          "description": ""
+        },
+        {
+          "id": "lastName",
+          "type": "STRING",
+          "label": "lastName",
+          "description": ""
+        },
+        {
+          "id": "country",
+          "type": "STRING",
+          "label": "country",
+          "description": ""
+        },
+        {
+          "id": "brand",
+          "type": "STRING",
+          "label": "brand",
+          "description": ""
+        },
+        {
+          "id": "emailAddress",
+          "type": "STRING",
+          "label": "emailAddress",
+          "description": ""
+        },
+        {
+          "id": "extensionPeriod",
+          "type": "ARRAY",
+          "label": "extensionPeriod",
+          "description": ""
+        },
+        {
+          "id": "endDate",
+          "type": "STRING",
+          "label": "endDate",
+          "description": ""
+        },
+        {
+          "id": "employeeType",
+          "type": "STRING",
+          "label": "employeeType",
+          "description": ""
+        }
+      ],
+      "formElements": [
+        {
+          "id": "967340942379",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "First Name",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "572346877292",
+                        "key": "firstName",
+                        "validations": []
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Last Name",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "530965317624",
+                        "key": "lastName",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Employee Type",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "389460921567",
+                        "key": "employeeType",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "General Information",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "894885943147",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Email Address",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "1324132234171",
+                "key": "emailAddress",
+                "validations": []
+              }
+            ],
+            "label": "General Information",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "309346107795",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "",
+                  "label": "Brand",
+                  "placeholder": "",
+                  "required": false
+                },
+                "elementType": "TEXT",
+                "id": "1324485271781",
+                "key": "brand",
+                "validations": []
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Country",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1066167476856",
+                        "key": "country",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "dataSource": {
+                            "config": {
+                              "aggregationBucketField": "attributes.country",
+                              "filters": {
+                                "attributes.brand": {
+                                  "exclude": false,
+                                  "value": "{{$.form.input.brand}}"
+                                },
+                                "attributes.country": {
+                                  "exclude": true,
+                                  "value": "{{$.form.input.country}}"
+                                }
+                              },
+                              "indices": [
+                                "identities"
+                              ],
+                              "label": "",
+                              "query": "attributes.cloudLifecycleState:active",
+                              "sublabel": "",
+                              "value": ""
+                            },
+                            "dataSourceType": "SEARCH"
+                          },
+                          "forceSelect": true,
+                          "helpText": "",
+                          "label": "New Country",
+                          "maximum": 1,
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "SELECT",
+                        "id": "438203609183",
+                        "key": "newCountry",
+                        "validations": [
+                          {
+                            "validationType": "DATA_SOURCE"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "200468833520",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "User Location",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "615204927416",
+                        "key": "userLocation",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "dataSource": {
+                            "config": {
+                              "aggregationBucketField": "attributes.userLocation",
+                              "filters": {
+                                "attributes.userLocation": {
+                                  "exclude": true,
+                                  "value": "{{$.form.input.userLocation}}"
+                                }
+                              },
+                              "indices": [
+                                "identities"
+                              ],
+                              "label": "",
+                              "query": "attributes.cloudLifecycleState:active",
+                              "sublabel": "",
+                              "value": ""
+                            },
+                            "dataSourceType": "SEARCH"
+                          },
+                          "forceSelect": true,
+                          "helpText": "",
+                          "label": "New User Location",
+                          "maximum": 1,
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "SELECT",
+                        "id": "1710165051211",
+                        "key": "newUserLocation",
+                        "validations": [
+                          {
+                            "validationType": "DATA_SOURCE"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "138954800598",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "aggregationBucketField": "attributes.userLocation",
+                      "filters": {},
+                      "indices": [
+                        "identities"
+                      ],
+                      "label": "",
+                      "query": "attributes.cloudLifecycleState:active",
+                      "sublabel": "",
+                      "value": ""
+                    },
+                    "dataSourceType": "SEARCH"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "New User Location",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1161066492001",
+                "key": "newUserLocation",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Contractor's End Date",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "321934056493",
+                        "key": "endDate",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "dataSource": {
+                            "config": {
+                              "formInputId": "extensionPeriod",
+                              "sortBy": "ASC"
+                            },
+                            "dataSourceType": "FORM_INPUT"
+                          },
+                          "forceSelect": true,
+                          "helpText": "",
+                          "label": "Extension Period",
+                          "maximum": 1,
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "SELECT",
+                        "id": "1462091471019",
+                        "key": "extensionPeriod",
+                        "validations": [
+                          {
+                            "validationType": "DATA_SOURCE"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "67202224194",
+                "key": "",
+                "validations": []
+              }
+            ],
+            "label": "Job Information",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "firstName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "572346877292"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "firstName",
+                "element": "572346877292"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "615204927416"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "lastName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "530965317624"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "lastName",
+                "element": "530965317624"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "country",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "country",
+                "element": "1066167476856"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1066167476856"
+              }
+            },
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "1066167476856"
+              }
+            },
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "438203609183"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "emailAddress",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1324132234171"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "emailAddress",
+                "element": "1324132234171"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "brand",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1324485271781"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "brand",
+                "element": "1324485271781"
+              }
+            },
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "1324485271781"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "userLocation",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "userLocation",
+                "element": "615204927416"
+              }
+            },
+            {
+              "effectType": "HIDE",
+              "config": {
+                "element": "1161066492001"
+              }
+            },
+            {
+              "effectType": "SHOW",
+              "config": {
+                "element": "1710165051211"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "endDate",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "321934056493"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "endDate",
+                "element": "321934056493"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "employeeType",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "389460921567"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "employeeType",
+                "element": "389460921567"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "employeeType",
+              "operator": "EQ",
+              "valueType": "STRING",
+              "value": "Employee"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "438203609183"
+              }
+            },
+            {
+              "effectType": "HIDE",
+              "config": {
+                "element": "1462091471019"
+              }
+            },
+            {
+              "effectType": "HIDE",
+              "config": {
+                "element": "321934056493"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-10-13T16:18:09.998806875Z",
+      "modified": "2025-11-27T10:49:35.945621189Z"
+    }
+  }
+]

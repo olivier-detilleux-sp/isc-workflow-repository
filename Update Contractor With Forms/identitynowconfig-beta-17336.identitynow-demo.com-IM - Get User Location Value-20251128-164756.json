@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "timestamp": "2025-11-28T16:47:56.992086425Z",
+  "tenant": "beta-17336",
+  "description": "Export Job vscode 2025-11-28T16:47:56.729Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "TRANSFORM"
+    ],
+    "objectOptions": {
+      "TRANSFORM": {
+        "includedNames": [],
+        "includedIds": [
+          "af8be3a0-f67d-444e-a7a2-4d414a2e2f5c"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "af8be3a0-f67d-444e-a7a2-4d414a2e2f5c",
+        "name": "IM - Get User Location Value",
+        "type": "TRANSFORM"
+      },
+      "object": {
+        "id": "af8be3a0-f67d-444e-a7a2-4d414a2e2f5c",
+        "name": "IM - Get User Location Value",
+        "type": "firstValid",
+        "attributes": {
+          "values": [
+            {
+              "type": "trim"
+            },
+            {
+              "type": "identityAttribute",
+              "attributes": {
+                "name": "userLocation"
+              }
+            }
+          ],
+          "ignoreErrors": true
+        },
+        "internal": false
+      }
+    }
+  ]
+}

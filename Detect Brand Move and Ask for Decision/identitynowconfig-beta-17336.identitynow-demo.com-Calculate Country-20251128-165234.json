@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "timestamp": "2025-11-28T16:52:36.01198342Z",
+  "tenant": "beta-17336",
+  "description": "Export Job vscode 2025-11-28T16:52:34.775Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "TRANSFORM"
+    ],
+    "objectOptions": {
+      "TRANSFORM": {
+        "includedNames": [],
+        "includedIds": [
+          "033494ee-f3b0-4ae6-8e03-78b3d976b8ca"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "033494ee-f3b0-4ae6-8e03-78b3d976b8ca",
+        "name": "Calculate Country",
+        "type": "TRANSFORM"
+      },
+      "object": {
+        "id": "033494ee-f3b0-4ae6-8e03-78b3d976b8ca",
+        "name": "Calculate Country",
+        "type": "conditional",
+        "attributes": {
+          "expression": "$oldBrand eq $newBrand",
+          "positiveCondition": "$newCountry",
+          "negativeCondition": "$oldCountry",
+          "lifeCycleState": {
+            "type": "identityAttribute",
+            "attributes": {
+              "name": "cloudLifecycleState"
+            }
+          },
+          "oldCountry": {
+            "type": "firstValid",
+            "attributes": {
+              "values": [
+                {
+                  "type": "identityAttribute",
+                  "attributes": {
+                    "name": "country"
+                  }
+                },
+                {
+                  "type": "lookup",
+                  "attributes": {
+                    "table": {
+                      "FR": "France",
+                      "IT": "Italy",
+                      "US": "USA",
+                      "default": "France"
+                    },
+                    "input": {
+                      "type": "accountAttribute",
+                      "attributes": {
+                        "sourceName": "HR",
+                        "attributeName": "country"
+                      }
+                    }
+                  }
+                }
+              ],
+              "ignoreErrors": false
+            }
+          },
+          "newCountry": {
+            "type": "lookup",
+            "attributes": {
+              "table": {
+                "FR": "France",
+                "IT": "Italy",
+                "US": "USA",
+                "default": "France"
+              },
+              "input": {
+                "type": "accountAttribute",
+                "attributes": {
+                  "sourceName": "HR",
+                  "attributeName": "country"
+                }
+              }
+            }
+          },
+          "oldBrand": {
+            "type": "firstValid",
+            "attributes": {
+              "values": [
+                {
+                  "type": "identityAttribute",
+                  "attributes": {
+                    "name": "organization"
+                  }
+                },
+                {
+                  "type": "accountAttribute",
+                  "attributes": {
+                    "sourceName": "HR",
+                    "attributeName": "brand"
+                  }
+                }
+              ],
+              "ignoreErrors": false
+            }
+          },
+          "newBrand": {
+            "type": "accountAttribute",
+            "attributes": {
+              "sourceName": "HR",
+              "attributeName": "brand"
+            }
+          }
+        },
+        "internal": false
+      }
+    }
+  ]
+}

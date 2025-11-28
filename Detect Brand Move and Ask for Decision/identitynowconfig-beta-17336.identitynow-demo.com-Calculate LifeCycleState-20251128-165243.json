@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "timestamp": "2025-11-28T16:52:44.566286731Z",
+  "tenant": "beta-17336",
+  "description": "Export Job vscode 2025-11-28T16:52:44.282Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "TRANSFORM"
+    ],
+    "objectOptions": {
+      "TRANSFORM": {
+        "includedNames": [],
+        "includedIds": [
+          "e2757ce8-8f4a-45ad-a737-686a83be2645"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "e2757ce8-8f4a-45ad-a737-686a83be2645",
+        "name": "Calculate LifeCycleState",
+        "type": "TRANSFORM"
+      },
+      "object": {
+        "id": "e2757ce8-8f4a-45ad-a737-686a83be2645",
+        "name": "Calculate LifeCycleState",
+        "type": "conditional",
+        "attributes": {
+          "expression": "$oldBrand eq $newBrand",
+          "positiveCondition": {
+            "type": "lower",
+            "attributes": {
+              "input": {
+                "type": "accountAttribute",
+                "attributes": {
+                  "sourceName": "HR",
+                  "attributeName": "lc_state"
+                }
+              }
+            }
+          },
+          "negativeCondition": "pendingCrossBrandMove",
+          "newBrand": {
+            "type": "accountAttribute",
+            "attributes": {
+              "sourceName": "HR",
+              "attributeName": "brand"
+            }
+          },
+          "oldBrand": {
+            "type": "firstValid",
+            "attributes": {
+              "values": [
+                {
+                  "type": "identityAttribute",
+                  "attributes": {
+                    "name": "organization"
+                  }
+                },
+                {
+                  "type": "accountAttribute",
+                  "attributes": {
+                    "sourceName": "HR",
+                    "attributeName": "brand"
+                  }
+                }
+              ],
+              "ignoreErrors": false
+            }
+          }
+        },
+        "internal": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "timestamp": "2025-11-28T16:47:54.866707934Z",
+  "tenant": "beta-17336",
+  "description": "Export Job vscode 2025-11-28T16:47:51.851Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "TRANSFORM"
+    ],
+    "objectOptions": {
+      "TRANSFORM": {
+        "includedNames": [],
+        "includedIds": [
+          "c5de90a5-e7ef-48eb-a700-4e7d9a2b1549"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "c5de90a5-e7ef-48eb-a700-4e7d9a2b1549",
+        "name": "IM - Get Country Value",
+        "type": "TRANSFORM"
+      },
+      "object": {
+        "id": "c5de90a5-e7ef-48eb-a700-4e7d9a2b1549",
+        "name": "IM - Get Country Value",
+        "type": "firstValid",
+        "attributes": {
+          "values": [
+            {
+              "type": "trim"
+            },
+            {
+              "type": "identityAttribute",
+              "attributes": {
+                "name": "country"
+              }
+            }
+          ],
+          "ignoreErrors": true
+        },
+        "internal": false
+      }
+    }
+  ]
+}

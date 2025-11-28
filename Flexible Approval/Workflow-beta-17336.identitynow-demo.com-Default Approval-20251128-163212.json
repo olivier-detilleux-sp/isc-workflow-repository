@@ -1,0 +1,219 @@
+{
+  "id": "cd3a97c3-fc9a-4ab5-aec5-904dfa223d42",
+  "name": "Default Approval",
+  "description": "Default approval workflow",
+  "definition": {
+    "start": "Get Identity",
+    "steps": {
+      "Approval Policy 1": {
+        "actionId": "sp:access-request-approval",
+        "attributes": {
+          "accessRequestId.$": "$.trigger.accessRequestId",
+          "accountActivityId.$": "$.trigger.accountActivityId",
+          "approvalActionAtTimeout": "EXPIRED",
+          "approvalReminder": "false",
+          "approvalTimeout": 10,
+          "approvalType": "SINGLE",
+          "autoApprovalEnabled.$": "$.trigger.autoApprovalEnabled",
+          "fallbackApprover.$": "$.trigger.fallbackApprover",
+          "multiApproverReviewersConfig_approvalScheme": "SERIAL",
+          "parentWorkflowExecutionId.$": "$.trigger.parentWorkflowExecutionId",
+          "priority": "MEDIUM",
+          "quorumApproverReviewersConfig_approvalScheme": "SERIAL",
+          "reminderFrequency_timeZone": "Europe/Paris",
+          "requestId.$": "$.trigger.requestId",
+          "requestedAt.$": "$.trigger.createdAt",
+          "requestedBy.$": "$.trigger.requestedBy",
+          "requestedFor.$": "$.trigger.requestedFor",
+          "requestedItem.$": "$.trigger.requestedItem",
+          "singleApproverCategory": "GOVERNANCE_GROUP",
+          "singleApproverGovernanceGroupId.$": "$.hTTPRequest1.body[0].id",
+          "singleApproverIdentityId.$": "$.trigger.requestedBy.id",
+          "sodViolationContext.$": "$.trigger.sodViolationContext",
+          "staticAttributes.$": "$.trigger.staticAttributes",
+          "workflowExecutionId.$": "$.trigger.workflowExecutionId"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Compare Strings": {
+        "actionId": "sp:compare-strings",
+        "choiceList": [
+          {
+            "comparator": "StringEquals",
+            "nextStep": "End Step - Success",
+            "variableA.$": "$.getIdentity.attributes.locationCode",
+            "variableB.$": "$.getIdentity1.attributes.locationCode"
+          }
+        ],
+        "defaultStep": "Define Variable 1",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Compare Strings 1": {
+        "actionId": "sp:compare-strings",
+        "choiceList": [
+          {
+            "comparator": "StringContains",
+            "nextStep": "Compare Strings",
+            "variableA.$": "$.defineVariable.supportTeam",
+            "variableB": "Support"
+          }
+        ],
+        "defaultStep": "Get List of Identities",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "Support Team",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest.body[0].access[?(@.source.name == \"ISC Governance\" && @.name =~ /.*Support/i)].name"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Compare Strings 1",
+        "type": "Mutation"
+      },
+      "Define Variable 1": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "Approval Group",
+              "transforms": [
+                {
+                  "id": "sp:transform:concatenate:string",
+                  "input": {
+                    "variableB": " Support"
+                  }
+                }
+              ],
+              "variableA.$": "$.getIdentity.attributes.locationCode"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request 1",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.trigger.requestedBy.id"
+        },
+        "displayName": "",
+        "nextStep": "Get Identity 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Identity 1": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.trigger.requestedFor.id"
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get List of Identities": {
+        "actionId": "sp:get-identities",
+        "attributes": {
+          "inputQuery": "id:{{$.trigger.requestedFor.id}} AND manager.id:{{$.trigger.requestedBy.id}}",
+          "searchBy": "searchQuery"
+        },
+        "displayName": "",
+        "nextStep": "Verify Data Type 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "indices": [
+              "identities"
+            ],
+            "query": {
+              "query": "{{$.trigger.requestedBy.id}}"
+            }
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/search"
+        },
+        "displayName": "",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": null,
+          "method": "get",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": null,
+          "requestHeaders": {
+            "X-SailPoint-Experimental": "true"
+          },
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/workgroups",
+          "urlParams": {
+            "filters": "name eq \"{{$.defineVariable1.approvalGroup}}\""
+          }
+        },
+        "displayName": "",
+        "nextStep": "Approval Policy 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Verify Data Type 1": {
+        "actionId": "sp:compare-unary",
+        "choiceList": [
+          {
+            "comparator": "IsPresent",
+            "nextStep": "End Step - Success",
+            "variableA.$": "$.getListOfIdentities.identities[0].id"
+          }
+        ],
+        "defaultStep": "Define Variable 1",
+        "displayName": "",
+        "type": "choice"
+      }
+    }
+  },
+  "enabled": true,
+  "executionCount": 10,
+  "failureCount": 6,
+  "trigger": {
+    "type": "AccessRequestTrigger",
+    "attributes": {
+      "id": "idn:access-request-trigger"
+    }
+  }
+}

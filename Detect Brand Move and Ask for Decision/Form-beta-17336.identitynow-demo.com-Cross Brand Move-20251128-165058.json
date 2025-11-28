@@ -1,0 +1,345 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "c8bc6b59-6d22-49cd-bb6a-86720db81a2b",
+      "name": "Cross Brand Move"
+    },
+    "object": {
+      "id": "c8bc6b59-6d22-49cd-bb6a-86720db81a2b",
+      "name": "Cross Brand Move",
+      "description": "Form to collect the decision in case of cross brand move",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "822f6025190442eaa1757f20ba58da7c",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "firstName",
+          "type": "STRING",
+          "label": "firstName",
+          "description": ""
+        },
+        {
+          "id": "lastName",
+          "type": "STRING",
+          "label": "lastName",
+          "description": ""
+        },
+        {
+          "id": "currentBrand",
+          "type": "STRING",
+          "label": "currentBrand",
+          "description": ""
+        },
+        {
+          "id": "targetBrand",
+          "type": "STRING",
+          "label": "targetBrand",
+          "description": ""
+        },
+        {
+          "id": "currentCountry",
+          "type": "STRING",
+          "label": "currentCountry",
+          "description": ""
+        },
+        {
+          "id": "targetCountry",
+          "type": "STRING",
+          "label": "targetCountry",
+          "description": ""
+        }
+      ],
+      "formElements": [
+        {
+          "id": "380839593062",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "A cross brand move has been detected from Workday. Use this form to decide wether the Active Directory account must be kept and moved to the new Brand or if a new account must be created.",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "First Name",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "275757098243",
+                        "key": "firstName",
+                        "validations": []
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Brand",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "758510706479",
+                        "key": "currentBrand",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Last name",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "414084361827",
+                        "key": "lastName",
+                        "validations": []
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Country",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1116119824642",
+                        "key": "currentCountry",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Identity Informations",
+                  "labelStyle": "h5",
+                  "showLabel": true
+                },
+                "elementType": "COLUMN_SET",
+                "id": "1555940581006",
+                "key": "",
+                "validations": []
+              }
+            ],
+            "label": "Cross Brand move detected for {{$.form.input.firstName}} {{$.form.input.lastName}}",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "549608670724",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Brand",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "457812169192",
+                        "key": "targetBrand",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Country",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1129572599217",
+                        "key": "targetCountry",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "New Brand Informations",
+                  "labelStyle": "h5",
+                  "showLabel": true
+                },
+                "elementType": "COLUMN_SET",
+                "id": "1093761557187",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "options": [
+                        {
+                          "label": "Move Existing Account",
+                          "subLabel": "",
+                          "value": "Move Existing Account"
+                        },
+                        {
+                          "label": "Create New Account",
+                          "subLabel": "",
+                          "value": "Create New Account"
+                        }
+                      ]
+                    },
+                    "dataSourceType": "STATIC"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "Decision",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "101808428074",
+                "key": "decision",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "Move Details",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "firstName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "275757098243"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "firstName",
+                "element": "275757098243"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "414084361827"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "lastName",
+                "element": "414084361827"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "758510706479"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "currentBrand",
+                "element": "758510706479"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1116119824642"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "currentCountry",
+                "element": "1116119824642"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "457812169192"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "targetBrand",
+                "element": "457812169192"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1129572599217"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "targetCountry",
+                "element": "1129572599217"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-08-13T11:35:04.322737713Z",
+      "modified": "2025-08-20T09:10:31.209471067Z"
+    }
+  }
+]

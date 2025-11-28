@@ -1,0 +1,352 @@
+{
+  "id": "d875aa30-ae4d-4e9f-a3f4-d24224e857aa",
+  "name": "Create New Contractor",
+  "description": "Create a new contractor Identity.",
+  "definition": {
+    "start": "Interactive Form",
+    "steps": {
+      "Compare Boolean": {
+        "actionId": "sp:compare-boolean",
+        "choiceList": [
+          {
+            "comparator": "BooleanEquals",
+            "nextStep": "HTTP Request 2",
+            "variableA.$": "$.interactiveForm1.formData.createANewIdentity",
+            "variableB": true
+          }
+        ],
+        "defaultStep": "Get Accounts",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Compare Numbers": {
+        "actionId": "sp:compare-numbers",
+        "choiceList": [
+          {
+            "comparator": "NumericLessThan",
+            "nextStep": "HTTP Request 1",
+            "variableA.$": "$.getListOfIdentities.identities.count()",
+            "variableB": 1
+          }
+        ],
+        "defaultStep": "Interactive Form 1",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "User Name",
+              "transforms": [
+                {
+                  "id": "sp:transform:concatenate:string",
+                  "input": {
+                    "variableB": "."
+                  }
+                },
+                {
+                  "id": "sp:transform:concatenate:string",
+                  "input": {
+                    "variableB.$": "$.interactiveForm.formData.lastName"
+                  }
+                }
+              ],
+              "variableA.$": "$.interactiveForm.formData.firstName"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request",
+        "type": "Mutation"
+      },
+      "Define Variable 1": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "Final UserName for contractor, removing special characters",
+              "name": "User Name",
+              "transforms": [],
+              "variableA.$": "$.hTTPRequest.body.previewAttributes[?(@.name == \"uid\")].value"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Get List of Identities",
+        "type": "Mutation"
+      },
+      "Define Variable 2": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "AccountID",
+              "transforms": [],
+              "variableA.$": "$.getAccounts.accounts[?(@.sourceId == \"e9cd14960ca34ef791511d42a9b372ad\")].id"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request 3",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "End Step - Success 1": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "End Step - Success 2": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Get Accounts": {
+        "actionId": "sp:get-accounts",
+        "attributes": {
+          "getAccountsBy": "specificIdentity",
+          "identity.$": "$.interactiveForm1.formData.potentialDuplicatedIdentities"
+        },
+        "displayName": "",
+        "nextStep": "Define Variable 2",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.interactiveForm.formData.sponsor"
+        },
+        "displayName": "Get Manager's Identity",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get List of Identities": {
+        "actionId": "sp:get-identities",
+        "attributes": {
+          "inputQuery": "((attributes.lastname.exact:/.*{{$.interactiveForm.formData.lastName}}.*/ AND attributes.firstname.exact:/.*{{$.interactiveForm.formData.firstName}}.*/ ) OR (attributes.lastname:{{$.interactiveForm.formData.lastName}}~1 AND attributes.firstname:{{$.interactiveForm.formData.firstName}}~1 ) OR (attributes.firstname.exact:{{$.interactiveForm.formData.lastName}} AND attributes.lastname.exact:{{$.interactiveForm.formData.firstName}} ))",
+          "searchBy": "searchQuery"
+        },
+        "displayName": "",
+        "nextStep": "Compare Numbers",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "identityAttributeConfig": {
+              "attributeTransforms": [
+                {
+                  "identityAttributeName": "uid",
+                  "transformDefinition": {
+                    "attributes": {
+                      "id": "Calculate Contractor ID",
+                      "input": "{{$.defineVariable.userName}}"
+                    },
+                    "type": "reference"
+                  }
+                }
+              ],
+              "enabled": true
+            },
+            "identityId": "2049a66dc8aa4357815204ee38ac2896"
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/identity-profiles/identity-preview"
+        },
+        "displayName": "Evaluate Contractor UserName",
+        "nextStep": "Define Variable 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "attributes": {
+              "brand": "{{$.interactiveForm.formData.brand}}",
+              "companyName": "{{$.interactiveForm.formData.companyName}}",
+              "country": "{{$.interactiveForm.formData.country}}",
+              "e-mail": "",
+              "endDate": "{{$.interactiveForm.formData.endDate}}",
+              "externalEmail": "{{$.interactiveForm.formData.externalEmailAddress}}",
+              "familyName": "{{$.interactiveForm.formData.lastName}}",
+              "givenName": "{{$.interactiveForm.formData.firstName}}",
+              "id": "{{$.defineVariable1.userName}}",
+              "manager": "{{$.getIdentity.attributes.uid}}",
+              "mission": "{{$.interactiveForm.formData.mission}}",
+              "name": "{{$.defineVariable1.userName}}",
+              "phoneNumber": "{{$.interactiveForm.formData.phoneNumber}}",
+              "sourceId": "e9cd14960ca34ef791511d42a9b372ad",
+              "startDate": "{{$.interactiveForm.formData.startDate}}",
+              "userLocation": "{{$.interactiveForm.formData.userLocation}}"
+            }
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/accounts"
+        },
+        "displayName": "Create Contractor Account",
+        "nextStep": "Interactive Message",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 2": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "attributes": {
+              "brand": "{{$.interactiveForm.formData.brand}}",
+              "companyName": "{{$.interactiveForm.formData.companyName}}",
+              "country": "{{$.interactiveForm.formData.country}}",
+              "e-mail": "",
+              "endDate": "{{$.interactiveForm.formData.endDate}}",
+              "externalEmail": "{{$.interactiveForm.formData.externalEmailAddress}}",
+              "familyName": "{{$.interactiveForm.formData.lastName}}",
+              "givenName": "{{$.interactiveForm.formData.firstName}}",
+              "id": "{{$.defineVariable1.userName}}",
+              "manager": "{{$.getIdentity.attributes.uid}}",
+              "mission": "{{$.interactiveForm.formData.mission}}",
+              "name": "{{$.defineVariable1.userName}}",
+              "phoneNumber": "{{$.interactiveForm.formData.phoneNumber}}",
+              "sourceId": "e9cd14960ca34ef791511d42a9b372ad",
+              "startDate": "{{$.interactiveForm.formData.startDate}}",
+              "userLocation": "{{$.interactiveForm.formData.userLocation}}"
+            }
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/accounts"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 3": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "attributes": {
+              "brand": "{{$.interactiveForm.formData.brand}}",
+              "companyName": "{{$.interactiveForm.formData.companyName}}",
+              "country": "{{$.interactiveForm.formData.country}}",
+              "e-mail": "",
+              "endDate": "{{$.interactiveForm.formData.endDate}}",
+              "externalEmail": "{{$.interactiveForm.formData.externalEmailAddress}}",
+              "familyName": "{{$.interactiveForm.formData.lastName}}",
+              "givenName": "{{$.interactiveForm.formData.firstName}}",
+              "id": "{{$.defineVariable1.userName}}",
+              "manager": "{{$.getIdentity.attributes.uid}}",
+              "mission": "{{$.interactiveForm.formData.mission}}",
+              "name": "{{$.defineVariable1.userName}}",
+              "phoneNumber": "{{$.interactiveForm.formData.phoneNumber}}",
+              "sourceId": "e9cd14960ca34ef791511d42a9b372ad",
+              "startDate": "{{$.interactiveForm.formData.startDate}}",
+              "userLocation": "{{$.interactiveForm.formData.userLocation}}"
+            }
+          },
+          "method": "post",
+          "oAuthClientId": "13933f987be44026b5baa7789c5398d9",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://beta-17336.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://beta-17336.api.identitynow-demo.com/v2025/accounts/{{$.defineVariable2.accountId}}",
+          "urlParams": {}
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success 2",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Interactive Form": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "fca9f818-a974-4d81-a4f8-4930e94d39ba",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>desc</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Contractor creation"
+        },
+        "description": null,
+        "displayName": "",
+        "nextStep": "Get Identity",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Form 1": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "7fe5d48b-8184-4c5d-b370-219972bb938f",
+          "inputForForm_array_identities.$": "$.getListOfIdentities.identities",
+          "inputForForm_array_identities_label": "$.name",
+          "inputForForm_array_identities_subLabel": "$.email",
+          "inputForForm_array_identities_value": "$.id",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "find duplicates"
+        },
+        "displayName": "",
+        "nextStep": "Compare Boolean",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Message": {
+        "actionId": "sp:interactive-message",
+        "attributes": {
+          "category": "INFO",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>{{$.getIdentity.name}}</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Contractor Account created"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 1
+      }
+    }
+  },
+  "enabled": true,
+  "executionCount": 1,
+  "failureCount": 1,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.workflowId == 'd875aa30-ae4d-4e9f-a3f4-d24224e857aa')]",
+      "id": "idn:interactive-process-launched"
+    }
+  }
+}

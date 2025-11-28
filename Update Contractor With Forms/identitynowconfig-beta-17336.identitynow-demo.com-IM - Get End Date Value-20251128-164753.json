@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "timestamp": "2025-11-28T16:47:54.838280525Z",
+  "tenant": "beta-17336",
+  "description": "Export Job vscode 2025-11-28T16:47:54.341Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "TRANSFORM"
+    ],
+    "objectOptions": {
+      "TRANSFORM": {
+        "includedNames": [],
+        "includedIds": [
+          "25540488-cbe1-4b0d-98bf-d996add6a987"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "25540488-cbe1-4b0d-98bf-d996add6a987",
+        "name": "IM - Get End Date Value",
+        "type": "TRANSFORM"
+      },
+      "object": {
+        "id": "25540488-cbe1-4b0d-98bf-d996add6a987",
+        "name": "IM - Get End Date Value",
+        "type": "firstValid",
+        "attributes": {
+          "values": [
+            {
+              "type": "trim"
+            },
+            {
+              "type": "identityAttribute",
+              "attributes": {
+                "name": "userLocation"
+              }
+            }
+          ],
+          "ignoreErrors": true
+        },
+        "internal": false
+      }
+    }
+  ]
+}

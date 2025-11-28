@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "timestamp": "2025-11-28T16:53:00.644885566Z",
+  "tenant": "beta-17336",
+  "description": "Export Job vscode 2025-11-28T16:52:59.993Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "TRANSFORM"
+    ],
+    "objectOptions": {
+      "TRANSFORM": {
+        "includedNames": [],
+        "includedIds": [
+          "1d46d540-8022-4ecb-a352-a8db244680f3"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "1d46d540-8022-4ecb-a352-a8db244680f3",
+        "name": "Calculate Job Title",
+        "type": "TRANSFORM"
+      },
+      "object": {
+        "id": "1d46d540-8022-4ecb-a352-a8db244680f3",
+        "name": "Calculate Job Title",
+        "type": "conditional",
+        "attributes": {
+          "expression": "$oldBrand eq $newBrand",
+          "positiveCondition": "$newJobTitle",
+          "negativeCondition": "$oldJobTitle",
+          "lifeCycleState": {
+            "type": "identityAttribute",
+            "attributes": {
+              "name": "cloudLifecycleState"
+            }
+          },
+          "oldJobTitle": {
+            "type": "firstValid",
+            "attributes": {
+              "values": [
+                {
+                  "type": "identityAttribute",
+                  "attributes": {
+                    "name": "jobTitle"
+                  }
+                },
+                {
+                  "type": "accountAttribute",
+                  "attributes": {
+                    "sourceName": "HR",
+                    "attributeName": "title"
+                  }
+                }
+              ],
+              "ignoreErrors": false
+            }
+          },
+          "newJobTitle": {
+            "type": "accountAttribute",
+            "attributes": {
+              "sourceName": "HR",
+              "attributeName": "title"
+            }
+          },
+          "oldBrand": {
+            "type": "firstValid",
+            "attributes": {
+              "values": [
+                {
+                  "type": "identityAttribute",
+                  "attributes": {
+                    "name": "organization"
+                  }
+                },
+                {
+                  "type": "accountAttribute",
+                  "attributes": {
+                    "sourceName": "HR",
+                    "attributeName": "brand"
+                  }
+                }
+              ],
+              "ignoreErrors": false
+            }
+          },
+          "newBrand": {
+            "type": "accountAttribute",
+            "attributes": {
+              "sourceName": "HR",
+              "attributeName": "brand"
+            }
+          }
+        },
+        "internal": false
+      }
+    }
+  ]
+}
