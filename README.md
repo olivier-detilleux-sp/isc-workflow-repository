@@ -92,3 +92,8 @@ The second Form is used to choose the attributes to update. I use some transform
 # Detect Brand Move and Ask for Decision
 
 This workflow is specific to a customer use case. Here the idea is to detect when someone is moving from a Brand to another. When someone is moving, first of all, the Identity must not be updated with the new value. Instead of that, a notification has to be send to someone (I'm doing it using form but maybe an adaptive approval would be better as it can be assigned to a Group of People). The recipient must decide wether or not the current AD account must be kept, moved and updated OR if a brand new account must be created. In order to put the process an hold until validation, I'm using custom LCS and transforms to make sure the identity attributes are not updated before the decision. I'm also using a NELM Source to temporaly create an Identity for the mover in case of new Account to be created. Then I relink the old AD account to that new Identity. The old Identity not having an AD account anymore will automatically create a new one.
+
+# Data Access Security Resource Owner Succession
+
+This workflow detects a leaver and in case it is the owner of some resources, it triggers another workflow to either start an election or assigns a new owner based on the manager's decision.
+In this workflow, I use DAS API, advanced emails templates, httprequest to open form instances and form completed trigger to start the reassign workflow

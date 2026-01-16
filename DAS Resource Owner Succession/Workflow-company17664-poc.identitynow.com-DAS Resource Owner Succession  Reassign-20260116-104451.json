@@ -1,0 +1,123 @@
+{
+  "id": "da15d252-f4e2-41c1-863b-1ba74b8b8b9c",
+  "name": "DAS: Resource Owner Succession : Reassign",
+  "description": "",
+  "definition": {
+    "start": "Define Variable",
+    "steps": {
+      "Compare Boolean": {
+        "actionId": "sp:compare-boolean",
+        "choiceList": [
+          {
+            "comparator": "BooleanEquals",
+            "nextStep": "HTTP Request",
+            "variableA.$": "$.trigger.formData.newOwnerSelectionType",
+            "variableB": true
+          }
+        ],
+        "defaultStep": "HTTP Request 1",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "Source Identity Id",
+              "transforms": [
+                {
+                  "id": "sp:transform:replace:string",
+                  "input": {
+                    "pattern": "^([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{12})$",
+                    "replacement": "$1-$2-$3-$4-$5"
+                  }
+                }
+              ],
+              "variableA.$": "$.trigger.createdBy.id"
+            },
+            {
+              "description": "",
+              "name": "Destination Identity Id",
+              "transforms": [
+                {
+                  "id": "sp:transform:replace:string",
+                  "input": {
+                    "pattern": "^([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{12})$",
+                    "replacement": "$1-$2-$3-$4-$5"
+                  }
+                }
+              ],
+              "variableA.$": "$.trigger.formData.newOwner"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Compare Boolean",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "End Step - Success 1": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "campaignName": "{{$.trigger.formData.firstName}} {{$.trigger.formData.lastName}} Succession: Resource Owner Election",
+            "ownerId": "{{$.defineVariable.sourceIdentityId}}"
+          },
+          "method": "post",
+          "oAuthClientId": "e575eeec305e4e1e8db39dfdcd843165",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company17664-poc.api.identitynow.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company17664-poc.api.identitynow.com/v2025/das/owners/reelect"
+        },
+        "displayName": "Re-Elect Source Owner",
+        "nextStep": "End Step - Success 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": null,
+          "method": "post",
+          "oAuthClientId": "e575eeec305e4e1e8db39dfdcd843165",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company17664-poc.api.identitynow.com/oauth/token",
+          "requestContentType": null,
+          "url": "https://company17664-poc.api.identitynow.com/v2025/das/owners/{{$.defineVariable.sourceIdentityId}}/reassign/{{$.defineVariable.destinationIdentityId}}"
+        },
+        "displayName": "Reassign Source Owner",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 8,
+  "failureCount": 3,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.formDefinitionId == 'd4fa2c94-de34-42b5-a710-06428349f180')]",
+      "formDefinitionId": "d4fa2c94-de34-42b5-a710-06428349f180",
+      "id": "sp:form-submitted"
+    }
+  }
+}

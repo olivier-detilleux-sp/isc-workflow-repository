@@ -1,0 +1,300 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "d4fa2c94-de34-42b5-a710-06428349f180",
+      "name": "DAS : Resource Owner Succession"
+    },
+    "object": {
+      "id": "d4fa2c94-de34-42b5-a710-06428349f180",
+      "name": "DAS : Resource Owner Succession",
+      "description": "This form is used to choose a new owner on resources in DAS.",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "8ee457de243d481abfc9cf3101031bd8",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "firstName",
+          "type": "STRING",
+          "label": "firstName",
+          "description": ""
+        },
+        {
+          "id": "lastName",
+          "type": "STRING",
+          "label": "lastName",
+          "description": ""
+        },
+        {
+          "id": "department",
+          "type": "STRING",
+          "label": "department",
+          "description": ""
+        },
+        {
+          "id": "company",
+          "type": "STRING",
+          "label": "company",
+          "description": ""
+        }
+      ],
+      "formElements": [
+        {
+          "id": "1606500416205",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "description": "<p>Your collaborator, {{$.form.input.firstName}} {{$.form.input.lastName}}, has just left the company. He was the owner of resources in your Collaborative Platform such as Shared Folders, SharePoint Sites or Teams.</p>\n<p>In order to keep those spaces properly managed, you have to choose a new Owner for those resources. If you don&#39;t know, you can generate an Owner Election Campaign</p>",
+                  "label": "Objective",
+                  "showLabel": true
+                },
+                "elementType": "DESCRIPTION",
+                "id": "1386383640887",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "FirstName",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "325733615953",
+                        "key": "firstName",
+                        "validations": []
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Company",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1427369853076",
+                        "key": "company",
+                        "validations": []
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "LastName",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1332253118745",
+                        "key": "lastName",
+                        "validations": []
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "Department",
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "TEXT",
+                        "id": "1498685299962",
+                        "key": "department",
+                        "validations": []
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Owner Information",
+                  "labelStyle": "h5",
+                  "showLabel": true
+                },
+                "elementType": "COLUMN_SET",
+                "id": "1255096047855",
+                "key": "",
+                "validations": []
+              }
+            ],
+            "label": "Resource Owner Succession",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "285363903359",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "default": false,
+                  "falseLabel": "Manual Selection",
+                  "helpText": "Choose wether you want to manually select a new owner or if you want to triger an owner election campaign",
+                  "label": "New Owner Selection Type",
+                  "trueLabel": "Owner Election"
+                },
+                "elementType": "TOGGLE",
+                "id": "1015980836666",
+                "key": "newOwnerSelectionType",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "filters": {},
+                      "indices": [
+                        "identities"
+                      ],
+                      "label": "attributes.displayName",
+                      "query": "*",
+                      "sublabel": "attributes.email",
+                      "value": "id"
+                    },
+                    "dataSourceType": "SEARCH_V2"
+                  },
+                  "forceSelect": true,
+                  "helpText": "",
+                  "label": "New Owner",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1395206422125",
+                "key": "newOwner",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "New Owner",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "INPUT",
+              "source": "firstName",
+              "operator": "NOT_EM",
+              "valueType": "STRING",
+              "value": ""
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "325733615953"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "firstName",
+                "element": "325733615953"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1332253118745"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "lastName",
+                "element": "1332253118745"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1427369853076"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "company",
+                "element": "1427369853076"
+              }
+            },
+            {
+              "effectType": "DISABLE",
+              "config": {
+                "element": "1498685299962"
+              }
+            },
+            {
+              "effectType": "SET_DEFAULT_VALUE",
+              "config": {
+                "defaultValueLabel": "department",
+                "element": "1498685299962"
+              }
+            }
+          ]
+        },
+        {
+          "ruleOperator": "AND",
+          "rules": [
+            {
+              "sourceType": "ELEMENT",
+              "source": "newOwnerSelectionType",
+              "operator": "EQ",
+              "valueType": "BOOLEAN",
+              "value": "true"
+            }
+          ],
+          "effects": [
+            {
+              "effectType": "HIDE",
+              "config": {
+                "element": "1395206422125"
+              }
+            }
+          ]
+        }
+      ],
+      "created": "2025-12-16T08:03:52.743884251Z",
+      "modified": "2025-12-16T15:36:01.883871775Z"
+    }
+  }
+]

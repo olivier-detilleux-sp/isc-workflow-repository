@@ -1,0 +1,182 @@
+{
+  "id": "3dddcec6-57bc-4360-9471-51e6e1bae082",
+  "name": "DAS: Resource Owner Succession : Detect",
+  "description": "This workflow will detect a leaver based on its lifecycle state and automatically start a process to ask the manager who is the most relevant successor. If the manager doesn't know, he can choose to start an owner election campaign.",
+  "definition": {
+    "start": "Get Identity",
+    "steps": {
+      "Compare Numbers": {
+        "actionId": "sp:compare-numbers",
+        "choiceList": [
+          {
+            "comparator": "NumericGreaterThan",
+            "nextStep": "HTTP Request 1",
+            "variableA.$": "$.hTTPRequest.body.count()",
+            "variableB": 0
+          }
+        ],
+        "defaultStep": "End Step - Success",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "Form Expiration Date",
+              "name": "Form Expiration Date",
+              "transforms": [
+                {
+                  "id": "sp:transform:addTime:time",
+                  "input": {
+                    "length": 7,
+                    "unit": "days"
+                  }
+                }
+              ],
+              "variableA.$": "$.now()"
+            },
+            {
+              "description": "Form Definition Id for the \"DAS : Resource Owner Succession\" Form",
+              "name": "Form Definition Id",
+              "transforms": [],
+              "variableA": "d4fa2c94-de34-42b5-a710-06428349f180"
+            },
+            {
+              "description": "Form Recipient. Manager per default but if not exists, it will fail",
+              "name": "Form Recipient",
+              "transforms": [
+                {
+                  "id": "sp:transform:replace:string",
+                  "input": {
+                    "pattern": "\\$\\.getIdentity\\.managerRef\\.id",
+                    "replacement": "8ee457de243d481abfc9cf3101031bd8"
+                  }
+                }
+              ],
+              "variableA.$": "$.getIdentity.managerRef.id"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Get Identity 1",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "description": "No resource ownership, end success",
+        "displayName": "",
+        "type": "success"
+      },
+      "End Step - Success 1": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.trigger.identity.id"
+        },
+        "displayName": "",
+        "nextStep": "HTTP Request",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Identity 1": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.defineVariable.formRecipient"
+        },
+        "displayName": "Get Form Recipient Identity",
+        "nextStep": "Compare Numbers",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "get",
+          "oAuthClientId": "e575eeec305e4e1e8db39dfdcd843165",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company17664-poc.api.identitynow.com/oauth/token",
+          "requestContentType": null,
+          "url": "https://company17664-poc.api.identitynow.com/v2025/das/owners/{{$.trigger.identity.id}}/resources"
+        },
+        "displayName": "List Resources for Owner",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request 1": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "createdBy": {
+              "id": "{{$.trigger.identity.id}}",
+              "type": "WORKFLOW_EXECUTION"
+            },
+            "expire": "{{$.defineVariable.formExpirationDate}}",
+            "formDefinitionId": "{{$.defineVariable.formDefinitionId}}",
+            "formInput": {
+              "company": "{{$.getIdentity.attributes.employeur}}",
+              "department": "{{$.getIdentity.attributes.equipe}}",
+              "firstName": "{{$.getIdentity.attributes.firstname}}",
+              "lastName": "{{$.getIdentity.attributes.lastname}}"
+            },
+            "recipients": [
+              {
+                "id": "{{$.defineVariable.formRecipient}}",
+                "type": "IDENTITY"
+              }
+            ]
+          },
+          "method": "post",
+          "oAuthClientId": "e575eeec305e4e1e8db39dfdcd843165",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company17664-poc.api.identitynow.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company17664-poc.api.identitynow.com/v2025/form-instances"
+        },
+        "displayName": "Create Form Instance",
+        "nextStep": "Send Email",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Send Email": {
+        "actionId": "sp:send-email",
+        "attributes": {
+          "body": "<p>Hello {{$.getIdentity.managerRef.name}}</p>\n<p>We wanted to inform you that {{$.getIdentity.attributes.displayName}} has recently left the company. He was the owner of several resources in your Collaborative Platform (e.g., Shared Folders, SharePoint Sites, Teams).</p>\n#set($applications = { \n \"1\": \"SharePoint Online\", \n \"2\": \"File Server\" \n })#set($resourceTypes = { \n \"0\": \"Folder\", \n \"7\": \"SharePoint Document\", \n \"8\": \"SharePoint List\", \n \"10\": \"SharePoint Site\", \n \"12\": \"SharePoint Folder\", \n \"950\": \"SharePoint File\" \n })\n<table style=\"border: 1px solid black; border-collapse: collapse;\">\n<tbody>\n<tr>\n<td style=\"border: 1px solid black; border-collapse: collapse;\"><strong>Application Name</strong></td>\n<td style=\"border: 1px solid black; border-collapse: collapse;\"><strong>Resource Name</strong></td>\n<td style=\"border: 1px solid black; border-collapse: collapse;\"><strong>Resource Full Path</strong></td>\n<td style=\"border: 1px solid black; border-collapse: collapse;\"><strong>Resource Type</strong></td>\n</tr>\n#foreach( $resource in ${resources} )\n<tr>\n<td style=\"border: 1px solid black; border-collapse: collapse;\">#set($applicationName = $applications.get(\"$resource.applicationId\"))#if(!$applicationName) Unknown #{else} $applicationName#end</td>\n<td style=\"border: 1px solid black; border-collapse: collapse;\">${resource.name}</td>\n<td style=\"border: 1px solid black; border-collapse: collapse;\"><a href=\"$resource.fullPath\">$resource.fullPath</a></td>\n<td style=\"border: 1px solid black; border-collapse: collapse;\">#set($resourceType = $resourceTypes.get(\"$resource.type\"))#if(!$resourceType) Unknown #{else} $resourceType#end</td>\n</tr>\n#end </tbody>\n</table>\n<p>Please click <a href=\"{{$.hTTPRequest1.body.standAloneFormUrl}}\">here</a> to open the succession form and assign a new owner to ensure proper management of these resources</p>\n<p>{{$.hTTPRequest1.body.standAloneFormUrl}}</p>",
+          "context": {
+            "resources.$": "$.hTTPRequest.body[*]"
+          },
+          "from": "no-reply@sailpoint.com",
+          "recipientEmailList.$": "$.getIdentity1.attributes.email",
+          "replyTo": null,
+          "subject": "Action Required – Ownership Succession for Collaborative Resources"
+        },
+        "description": "Send link to the form to the Form Recipient (Manager or Default Recipient) with the list of resources owned by the Leaver",
+        "displayName": "",
+        "nextStep": "End Step - Success 1",
+        "type": "action",
+        "versionNumber": 2
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 0,
+  "failureCount": 0,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.newLifecycleState == \"inactive\")]",
+      "id": "idn:identity-lifecycle-state-changed"
+    }
+  }
+}
