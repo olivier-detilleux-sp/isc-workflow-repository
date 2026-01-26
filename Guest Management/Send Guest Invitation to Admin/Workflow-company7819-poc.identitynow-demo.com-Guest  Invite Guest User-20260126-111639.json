@@ -1,0 +1,142 @@
+{
+  "id": "7ab1e4e9-1d3a-4327-8810-e02bdee5666e",
+  "name": "Guest : Invite Guest User",
+  "description": "Reinvite a guest user on admin email address",
+  "definition": {
+    "start": "Define Variable",
+    "steps": {
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "EntraIDTokenUrl",
+              "transforms": [],
+              "variableA": "https://login.microsoftonline.com/dce21e66-3a03-4ea3-b0c7-ffdc0729c732/oauth2/v2.0/token"
+            },
+            {
+              "description": "",
+              "name": "EntraIdClientId",
+              "transforms": [],
+              "variableA": "51c2bfcb-a325-40ab-abd8-7eb59c846639"
+            },
+            {
+              "description": "",
+              "name": "EntraIdUrl",
+              "transforms": [
+                {
+                  "id": "sp:transform:concatenate:string",
+                  "input": {
+                    "variableB.$": "$.trigger.accountRequests[?(@.source.name == \"Azure Guest\")].accountId"
+                  }
+                },
+                {
+                  "id": "sp:transform:concatenate:string",
+                  "input": {
+                    "variableB": "/authentication/temporaryAccessPassMethods"
+                  }
+                }
+              ],
+              "variableA": "https://graph.microsoft.com/beta/users/"
+            },
+            {
+              "description": "",
+              "name": "IdentityName",
+              "transforms": [],
+              "variableA.$": "$.trigger.recipient.name"
+            }
+          ]
+        },
+        "displayName": "",
+        "nextStep": "Get Accounts",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Get Accounts": {
+        "actionId": "sp:get-accounts",
+        "attributes": {
+          "filterCriteria": null,
+          "getAccountsBy": "specificIdentity",
+          "identity.$": "$.trigger.recipient.id",
+          "operator": null
+        },
+        "displayName": "",
+        "nextStep": "Loop",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Loop": {
+        "actionId": "sp:loop:iterator",
+        "attributes": {
+          "context.$": "$.defineVariable",
+          "input.$": "$.trigger.accountRequests[?(@.source.name == \"Azure Guest\")].attributeRequests[?(@.attributeName == \"invitedUserEmailAddress\")]",
+          "start": "HTTP Request",
+          "steps": {
+            "End Step - Success 1": {
+              "actionId": "sp:operator-success",
+              "displayName": "",
+              "type": "success"
+            },
+            "HTTP Request": {
+              "actionId": "sp:http",
+              "attributes": {
+                "authenticationType": "OAuth",
+                "jsonRequestBody": {
+                  "inviteRedirectUrl": "https://myapplications.microsoft.com/?tenantid=dce21e66-3a03-4ea3-b0c7-ffdc0729c732",
+                  "invitedUserDisplayname": "{{$.loop.context.identityName}}",
+                  "invitedUserEmailAddress": "{{$.loop.loopInput.attributeValue}}",
+                  "invitedUserMessageInfo": {
+                    "ccRecipients": [
+                      {
+                        "emailAddress": {
+                          "address": "admin@famdemo.onmicrosoft.com",
+                          "name": "{{$.loop.context.identityName}}"
+                        }
+                      }
+                    ],
+                    "customizedMessageBody": ""
+                  },
+                  "sendInvitationMessage": true
+                },
+                "method": "post",
+                "oAuthClientId": "51c2bfcb-a325-40ab-abd8-7eb59c846639",
+                "oAuthClientSecret": null,
+                "oAuthCredentialLocation": "oAuthInBody",
+                "oAuthScope": "https://graph.microsoft.com/.default",
+                "oAuthTokenUrl": "https://login.microsoftonline.com/dce21e66-3a03-4ea3-b0c7-ffdc0729c732/oauth2/v2.0/token",
+                "requestContentType": "json",
+                "url": "https://graph.microsoft.com/v1.0/invitations"
+              },
+              "description": null,
+              "displayName": "Send Invitation",
+              "nextStep": "End Step - Success 1",
+              "type": "action",
+              "versionNumber": 2
+            }
+          }
+        },
+        "description": "Parse Get Accounts to send invitations",
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 1
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 32,
+  "failureCount": 24,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$.accountRequests[?(@.source.name == \"Azure Guest\" && @.provisioningResult == \"committed\" && @.accountOperation == \"Create\")].attributeRequests[?(@.attributeValue == \"Guest User B2B\")]",
+      "id": "idn:post-provisioning"
+    }
+  }
+}

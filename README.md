@@ -97,3 +97,19 @@ This workflow is specific to a customer use case. Here the idea is to detect whe
 
 This workflow detects a leaver and in case it is the owner of some resources, it triggers another workflow to either start an election or assigns a new owner based on the manager's decision.
 In this workflow, I use DAS API, advanced emails templates, httprequest to open form instances and form completed trigger to start the reassign workflow
+
+# Guest Management
+
+There are multiple workflows and forms related to EntraID Guest Accounts management :
+
+## External Identity Creation
+
+This is a form / workflow to create a new external identity. You need a NELM source and an EntraID Source able to provision a "Guest User B2B" based on the type of the identity
+
+## Send Guest Invitation to Admin
+
+When you create a new Guest Account in Entra, you can configure the provisioning to send an invitation to the Guest. The problem is : you'll never receive the email. So if the purpose of the demo is to show that email, you can't. The idea of the workflow is to send again the "Microsoftinvitation" but to another email
+
+## New Guest Detection and Remediation
+
+This is a NCD workflow detecting a new Guest in EntraID after aggregation and deleting the account

@@ -1,0 +1,222 @@
+{
+  "id": "463657d6-ba27-4ba6-904c-9718bb09e3f9",
+  "name": "Guest - External Identity Creation",
+  "description": "",
+  "definition": {
+    "start": "Get Identity 1",
+    "steps": {
+      "Compare Strings": {
+        "actionId": "sp:compare-strings",
+        "choiceList": [
+          {
+            "comparator": "StringEquals",
+            "nextStep": "HTTP Request",
+            "variableA.$": "$.trigger.launchedBy.id",
+            "variableB.$": "$.getIdentity.id"
+          }
+        ],
+        "defaultStep": "Interactive Message 2",
+        "displayName": "",
+        "type": "choice"
+      },
+      "Define Variable": {
+        "actionId": "sp:define-variable",
+        "attributes": {
+          "id": "sp:define-variable",
+          "variables": [
+            {
+              "description": "",
+              "name": "End Date",
+              "transforms": [
+                {
+                  "id": "sp:transform:addTime:time",
+                  "input": {
+                    "length.$": "$.interactiveForm.formData.accountValidityDuration",
+                    "unit": "months"
+                  }
+                }
+              ],
+              "variableA.$": "$.now()"
+            },
+            {
+              "description": "",
+              "name": "Start Date",
+              "transforms": [],
+              "variableA.$": "$.now()"
+            }
+          ]
+        },
+        "displayName": "Define Dates",
+        "nextStep": "Compare Strings",
+        "type": "Mutation"
+      },
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "Generic Approval Policy": {
+        "actionId": "sp:generic-approval",
+        "attributes": {
+          "approvalActionAtTimeout": "EXPIRED",
+          "approvalReminder": "false",
+          "approvalTimeout": 1,
+          "approvalType": "SINGLE",
+          "byIdentity.$": "$.trigger.launchedBy.id",
+          "comments": "{{$.getIdentity1.attributes.displayName}} has requested the creation of a Guest Account for {{$.interactiveForm.formData.firstName}} {{$.interactiveForm.formData.lastName}} with the following comment: {{$.interactiveForm.formData.comments}}. Please approve or reject that request.",
+          "description": "New Guest Account for {{$.interactiveForm.formData.firstName}} {{$.interactiveForm.formData.lastName}} [{{$.interactiveForm.formData.emailAddress}}]",
+          "forIdentity.$": "$.trigger.launchedBy.id",
+          "multiApproverReviewersConfig_approvalScheme": "SERIAL",
+          "name": "Invite New Guest : Approve the creation request",
+          "priority": null,
+          "quorumApproverReviewersConfig_approvalScheme": "SERIAL",
+          "reAuthRequired": false,
+          "reminderFrequency_timeZone": "Europe/Paris",
+          "requestedBy": "IDENTITY",
+          "requestedFor": "IDENTITY",
+          "singleApproverCategory": "IDENTITY",
+          "singleApproverIdentityId.$": "$.interactiveForm.formData.sponsor"
+        },
+        "description": null,
+        "displayName": "",
+        "nextStep": "HTTP Request",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Get Identity": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.interactiveForm.formData.sponsor"
+        },
+        "displayName": "Get Sponsor Identity",
+        "nextStep": "Define Variable",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Get Identity 1": {
+        "actionId": "sp:get-identity",
+        "attributes": {
+          "id.$": "$.trigger.launchedBy.id"
+        },
+        "displayName": "Get Launcher Identity",
+        "nextStep": "Interactive Message",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "jsonRequestBody": {
+            "accountName": "{{$.interactiveForm.formData.emailAddress}}",
+            "data": {
+              "company": "{{$.interactiveForm.formData.company}}"
+            },
+            "email": "{{$.interactiveForm.formData.emailAddress}}",
+            "endDate": "{{$.defineVariable.endDate}}",
+            "firstName": "{{$.interactiveForm.formData.firstName}}",
+            "lastName": "{{$.interactiveForm.formData.lastName}}",
+            "manager": "{{$.getIdentity.name}}",
+            "phone": "{{$.interactiveForm.formData.phoneNumber}}",
+            "sourceId": "1023e5f2929d490097efbcf116631899",
+            "startDate": "{{$.defineVariable.startDate}}"
+          },
+          "method": "post",
+          "oAuthClientId": "d0c635df98074797ac0970040374778d",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInHeader",
+          "oAuthTokenUrl": "https://company7819-poc.api.identitynow-demo.com/oauth/token",
+          "requestContentType": "json",
+          "url": "https://company7819-poc.api.identitynow-demo.com/v3/non-employee-records"
+        },
+        "displayName": "Create NELM Account",
+        "nextStep": "Interactive Message 1",
+        "type": "action",
+        "versionNumber": 2
+      },
+      "Interactive Form": {
+        "actionId": "sp:interactive-form",
+        "attributes": {
+          "formDefinitionId": "d0f391ba-811f-46cc-97d8-1a21862b58c0",
+          "inputForForm_array_validityPeriods": [
+            {
+              "id": "1",
+              "name": "1 month"
+            },
+            {
+              "id": "6",
+              "name": "6 months"
+            },
+            {
+              "id": "12",
+              "name": "12 months"
+            }
+          ],
+          "inputForForm_array_validityPeriods_label": "$.name",
+          "inputForForm_array_validityPeriods_value": "$.id",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>Please give the below information to request the creation of a new Identity</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "Get Information"
+        },
+        "displayName": "",
+        "nextStep": "Get Identity",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Message": {
+        "actionId": "sp:interactive-message",
+        "attributes": {
+          "category": "INFO",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>You can use this form to request the creation of an external identity in order to collaborate in Teams.</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "🧑‍💻 Fill this form to request the creation of a new external collaborator"
+        },
+        "description": null,
+        "displayName": "",
+        "nextStep": "Interactive Form",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Message 1": {
+        "actionId": "sp:interactive-message",
+        "attributes": {
+          "category": "INFO",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>The identity for the new external collaborator is in progress. It will be sent for approval to the sponsor before activation.</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "🏗️ Identity Creation in progress"
+        },
+        "displayName": "",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 1
+      },
+      "Interactive Message 2": {
+        "actionId": "sp:interactive-message",
+        "attributes": {
+          "category": "INFO",
+          "interactiveProcessId.$": "$.trigger.interactiveProcessId",
+          "message": "<p>The creation has been sent for approval to the sponsor. If approved, the Guest Account will be immediately created.</p>",
+          "ownerId.$": "$.trigger.launchedBy.id",
+          "title": "✉️ Creation has been sent for approval"
+        },
+        "displayName": "",
+        "nextStep": "Generic Approval Policy",
+        "type": "action",
+        "versionNumber": 1
+      }
+    }
+  },
+  "enabled": true,
+  "executionCount": 40,
+  "failureCount": 9,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$[?(@.workflowId == '463657d6-ba27-4ba6-904c-9718bb09e3f9')]",
+      "id": "idn:interactive-process-launched"
+    }
+  }
+}

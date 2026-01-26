@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "timestamp": "2026-01-26T11:13:42.876210604Z",
+  "tenant": "company7819-poc",
+  "description": "Export Job vscode 2026-01-26T11:13:21.540Z",
+  "options": {
+    "excludeTypes": null,
+    "includeTypes": [
+      "SOURCE"
+    ],
+    "objectOptions": {
+      "SOURCE": {
+        "includedNames": [],
+        "includedIds": [
+          "1023e5f2929d490097efbcf116631899"
+        ]
+      }
+    }
+  },
+  "objects": [
+    {
+      "version": 1,
+      "self": {
+        "id": "1023e5f2929d490097efbcf116631899",
+        "name": "Collaboration with Guest",
+        "type": "SOURCE"
+      },
+      "object": {
+        "id": "1023e5f2929d490097efbcf116631899",
+        "name": "Collaboration with Guest",
+        "type": "Non-Employee",
+        "connectorClass": "com.sailpoint.connector.NesrConnector",
+        "connectorScriptName": "non-employee",
+        "description": "Source to create identities for Guest",
+        "deleteThreshold": 10,
+        "provisionAsCsv": false,
+        "owner": {
+          "type": "IDENTITY",
+          "id": "d5e226124d0541869a088c073d8ec4fa",
+          "name": "olivier.detilleux"
+        },
+        "accountCorrelationRule": null,
+        "managerCorrelationRule": null,
+        "beforeProvisioningRule": null,
+        "features": [
+          "NO_RANDOM_ACCESS"
+        ],
+        "schemas": [
+          {
+            "nativeObjectType": "user",
+            "identityAttribute": "id",
+            "displayAttribute": "accountName",
+            "hierarchyAttribute": null,
+            "includePermissions": false,
+            "features": [],
+            "configuration": {},
+            "attributes": [
+              {
+                "name": "id",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "id",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "accountName",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "Account Name",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "firstName",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "First Name",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "lastName",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "Last Name",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "phone",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "Phone",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "email",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "Email",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "manager",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "Manager's name",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "startDate",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "Start Date",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "endDate",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": "End Date",
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              },
+              {
+                "name": "company",
+                "nativeName": null,
+                "type": "STRING",
+                "schema": null,
+                "description": null,
+                "isMulti": false,
+                "isEntitlement": false,
+                "isGroup": false
+              }
+            ],
+            "id": "77f87f1b2ac34729a347768a7fca2cba",
+            "name": "account",
+            "created": "2024-01-25T11:44:37.759Z",
+            "modified": "2025-01-06T15:18:11.415Z"
+          },
+          {
+            "nativeObjectType": "group",
+            "identityAttribute": "",
+            "displayAttribute": "",
+            "hierarchyAttribute": null,
+            "includePermissions": false,
+            "features": [],
+            "configuration": {},
+            "attributes": [],
+            "id": "dc79ba0ff76a480e9b4870bebb462382",
+            "name": "group",
+            "created": "2024-01-25T11:44:37.759Z",
+            "modified": "2024-01-25T11:44:37.759Z"
+          }
+        ],
+        "connectorAttributes": {
+          "cloudAuthoritativeSourcePrecedence": 40,
+          "templateApplication": "Non-Employee Source Template",
+          "healthy": true,
+          "deleteThresholdPercentage": 10,
+          "cloudDisplayName": "Collaboration with Guest",
+          "connectorName": "Non-Employee",
+          "connectionType": "file",
+          "cloudIdentityProfileName": "Collaboration with Guest",
+          "since": "2024-01-26T07:22:43.460706Z",
+          "status": "SOURCE_STATE_HEALTHY"
+        },
+        "crossTenantConnectorAttributes": {},
+        "correlationConfigDetails": {
+          "attributeAssignments": [
+            {
+              "complex": false,
+              "property": "name",
+              "operation": "EQ",
+              "value": "accountName",
+              "ignoreCase": false,
+              "matchMode": null,
+              "filterString": null,
+              "sequence": 1
+            },
+            {
+              "complex": false,
+              "property": "email",
+              "operation": "EQ",
+              "value": "email",
+              "ignoreCase": false,
+              "matchMode": null,
+              "filterString": null,
+              "sequence": 2
+            }
+          ],
+          "id": "e88f8d21e027451b96951858a4303166",
+          "name": "Collaboration with Guest [source] Account Correlation Config"
+        },
+        "managerCorrelationMapping": {
+          "identityAttributeName": "name",
+          "accountAttributeName": "manager"
+        },
+        "provisioningPolicies": [],
+        "managementWorkgroup": null,
+        "passwordPolicies": null
+      }
+    }
+  ]
+}

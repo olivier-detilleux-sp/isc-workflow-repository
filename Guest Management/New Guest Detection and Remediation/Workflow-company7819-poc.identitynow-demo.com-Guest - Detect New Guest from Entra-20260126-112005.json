@@ -1,0 +1,43 @@
+{
+  "id": "7d6e048b-8827-48d4-ab1d-0c3d2a96ef96",
+  "name": "Guest - Detect New Guest from Entra",
+  "description": "Workflow that detects new guest created directly in Entra and disable the account immediately",
+  "definition": {
+    "start": "HTTP Request",
+    "steps": {
+      "End Step - Success": {
+        "actionId": "sp:operator-success",
+        "displayName": "",
+        "type": "success"
+      },
+      "HTTP Request": {
+        "actionId": "sp:http",
+        "attributes": {
+          "authenticationType": "OAuth",
+          "method": "delete",
+          "oAuthClientId": "51c2bfcb-a325-40ab-abd8-7eb59c846639",
+          "oAuthClientSecret": null,
+          "oAuthCredentialLocation": "oAuthInBody",
+          "oAuthScope": "https://graph.microsoft.com/.default",
+          "oAuthTokenUrl": "https://login.microsoftonline.com/dce21e66-3a03-4ea3-b0c7-ffdc0729c732/oauth2/v2.0/token",
+          "url": "https://graph.microsoft.com/v1.0/users/{{$.trigger.account.nativeIdentity}}"
+        },
+        "description": "Delete Guest Account in Entra ID",
+        "displayName": "Delete Guest Account",
+        "nextStep": "End Step - Success",
+        "type": "action",
+        "versionNumber": 2
+      }
+    }
+  },
+  "enabled": false,
+  "executionCount": 14,
+  "failureCount": 9,
+  "trigger": {
+    "type": "EVENT",
+    "attributes": {
+      "filter.$": "$.source[?(@.name == \"Azure Guest\")]",
+      "id": "idn:native-change-account-created"
+    }
+  }
+}

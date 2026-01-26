@@ -1,0 +1,295 @@
+[
+  {
+    "version": 1,
+    "self": {
+      "type": "FORM_DEFINITION",
+      "id": "d0f391ba-811f-46cc-97d8-1a21862b58c0",
+      "name": "Guest Invitation"
+    },
+    "object": {
+      "id": "d0f391ba-811f-46cc-97d8-1a21862b58c0",
+      "name": "Guest Invitation",
+      "description": "Form to create a new Identity to invite an external people to collaborate",
+      "owner": {
+        "type": "IDENTITY",
+        "id": "d5e226124d0541869a088c073d8ec4fa",
+        "name": "olivier.detilleux"
+      },
+      "usedBy": [],
+      "formInput": [
+        {
+          "id": "validityPeriods",
+          "type": "ARRAY",
+          "label": "Validity Periods",
+          "description": "Array with validity periods (1, 6 or 12 months)"
+        }
+      ],
+      "formElements": [
+        {
+          "id": "1602239559571",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "FirstName",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "TEXT",
+                        "id": "577386262896",
+                        "key": "firstName",
+                        "validations": [
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "External email address of the external collaborator",
+                          "label": "Email Address",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "EMAIL",
+                        "id": "962926563558",
+                        "key": "emailAddress",
+                        "validations": [
+                          {
+                            "validationType": "EMAIL"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "helpText": "",
+                          "label": "LastName",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "TEXT",
+                        "id": "658549127927",
+                        "key": "lastName",
+                        "validations": [
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      },
+                      {
+                        "config": {
+                          "default": "",
+                          "description": "",
+                          "formatAsYouType": true,
+                          "helpText": "External phone number of the external collaborator",
+                          "internationalized": true,
+                          "label": "Phone Number",
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "PHONE",
+                        "id": "1073764617630",
+                        "key": "phoneNumber",
+                        "validations": [
+                          {
+                            "validationType": "PHONE"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "179980235067",
+                "key": "",
+                "validations": []
+              }
+            ],
+            "label": "General Information",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        },
+        {
+          "id": "446078553250",
+          "elementType": "SECTION",
+          "config": {
+            "alignment": "LEFT",
+            "description": "",
+            "formElements": [
+              {
+                "config": {
+                  "columnCount": 2,
+                  "columns": [
+                    [
+                      {
+                        "config": {
+                          "dataSource": {
+                            "config": {
+                              "objectType": "IDENTITY"
+                            },
+                            "dataSourceType": "INTERNAL"
+                          },
+                          "forceSelect": true,
+                          "helpText": "Name of the person in charge of the external collaborator. An approval will be sent to that person",
+                          "label": "Sponsor",
+                          "maximum": 1,
+                          "placeholder": "",
+                          "required": true
+                        },
+                        "elementType": "SELECT",
+                        "id": "1293461364905",
+                        "key": "sponsor",
+                        "validations": [
+                          {
+                            "validationType": "DATA_SOURCE"
+                          },
+                          {
+                            "validationType": "REQUIRED"
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        "config": {
+                          "dataSource": {
+                            "config": {
+                              "options": [
+                                {
+                                  "label": "Contoso",
+                                  "sublabel": "",
+                                  "value": "Contoso"
+                                },
+                                {
+                                  "label": "Adatum",
+                                  "sublabel": "",
+                                  "value": "Adatum"
+                                },
+                                {
+                                  "label": "Fabrikam",
+                                  "sublabel": "",
+                                  "value": "Fabrikam"
+                                }
+                              ]
+                            },
+                            "dataSourceType": "STATIC"
+                          },
+                          "forceSelect": false,
+                          "helpText": "Name of the external company. You can enter a new name if required",
+                          "label": "Company",
+                          "maximum": 1,
+                          "placeholder": "",
+                          "required": false
+                        },
+                        "elementType": "SELECT",
+                        "id": "1313764008147",
+                        "key": "company",
+                        "validations": [
+                          {
+                            "validationType": "DATA_SOURCE"
+                          }
+                        ]
+                      }
+                    ]
+                  ],
+                  "description": "",
+                  "label": "Column Set",
+                  "labelStyle": "h5",
+                  "showLabel": false
+                },
+                "elementType": "COLUMN_SET",
+                "id": "1617161852619",
+                "key": "",
+                "validations": []
+              },
+              {
+                "config": {
+                  "dataSource": {
+                    "config": {
+                      "formInputId": "validityPeriods",
+                      "sortBy": "ASC"
+                    },
+                    "dataSourceType": "FORM_INPUT"
+                  },
+                  "forceSelect": true,
+                  "helpText": "Select how long the external user’s identity should remain active.\nAfter this period, the account will be automatically disabled.",
+                  "label": "Account Validity Duration",
+                  "maximum": 1,
+                  "placeholder": "",
+                  "required": true
+                },
+                "elementType": "SELECT",
+                "id": "1258401608230",
+                "key": "accountValidityDuration",
+                "validations": [
+                  {
+                    "validationType": "DATA_SOURCE"
+                  },
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              },
+              {
+                "config": {
+                  "default": "",
+                  "description": "",
+                  "helpText": "Please add a few words about the reason of your request",
+                  "label": "Comments",
+                  "placeholder": "",
+                  "required": true,
+                  "resize": true,
+                  "rows": 2
+                },
+                "elementType": "TEXTAREA",
+                "id": "1259680386395",
+                "key": "comments",
+                "validations": [
+                  {
+                    "validationType": "REQUIRED"
+                  }
+                ]
+              }
+            ],
+            "label": "Organizational Information",
+            "labelStyle": "h2",
+            "showLabel": true
+          },
+          "validations": []
+        }
+      ],
+      "formConditions": [],
+      "created": "2025-01-06T13:47:05.503534921Z",
+      "modified": "2026-01-14T09:01:27.863928187Z"
+    }
+  }
+]
